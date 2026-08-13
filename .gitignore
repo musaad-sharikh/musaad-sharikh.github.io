@@ -2,3 +2,8 @@
 *.swp
 /tmp/
 .superpowers/
+
+# Local tooling scratch — never part of the published site.
+.claude/
+.playwright/
+node_modules/
