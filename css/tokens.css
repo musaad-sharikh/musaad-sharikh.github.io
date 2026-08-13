@@ -6,8 +6,12 @@
   src: url('../assets/fonts/inter-subset.woff2') format('woff2-variations');
   font-weight: 100 900;
   font-display: swap;
+  /* U+2215 (division slash) and U+FFFD (replacement character) are omitted: the source
+     Inter build has no glyph for either, so inter-subset.woff2 doesn't either. Declaring
+     them here would make the browser select this face for those codepoints and draw
+     tofu instead of falling back. Don't add them back without adding the glyphs. */
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F, U+2074,
-                 U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+                 U+20AC, U+2122, U+2191, U+2193, U+2212, U+FEFF;
 }
 
 @font-face {
@@ -15,7 +19,13 @@
   src: url('../assets/fonts/noto-sans-arabic-subset.woff2') format('woff2-variations');
   font-weight: 100 900;
   font-display: swap;
-  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF, U+FE70-FEFF;
+  /* U+FB50-FDFF (Arabic Presentation Forms-A) is omitted: it was dropped from the
+     subset in tools/build-fonts.sh to fit the font size budget (it's a legacy
+     compatibility block ordinary authored Arabic text never uses), so the glyphs
+     genuinely aren't in noto-sans-arabic-subset.woff2. Declaring it here would make
+     the browser select this face for that block and draw tofu instead of falling
+     back. Don't restore it without also restoring the glyphs. */
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FE70-FEFF;
 }
 
 :root {
