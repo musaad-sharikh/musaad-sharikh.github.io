@@ -14,18 +14,42 @@
                  U+20AC, U+2122, U+2191, U+2193, U+2212, U+FEFF;
 }
 
+/* IBM Plex Sans Arabic ships as static weights, not a variable font, so each
+   weight is its own face. This is not a downgrade: because every face carries the
+   same unicode-range, an English reader still downloads none of them, and an
+   Arabic reader downloads only the weights the page actually paints — 400 for
+   body copy, 600 for UI labels, 700 for headings and table headers.
+
+   U+200C-200F (ZWJ/ZWNJ and the directional marks) is NOT declared: IBM Plex
+   Sans Arabic has no glyphs for those four codepoints. They are zero-width and
+   the shaper handles them, so falling back costs nothing — but declaring them
+   would point the browser at a face that cannot draw them.
+
+   U+FB50-FDFF (Presentation Forms-A) IS declared here, unlike the Noto build it
+   replaces: these 196 glyphs are present, so pasted legacy text renders rather
+   than falling back. */
 @font-face {
-  font-family: 'Noto Sans Arabic';
-  src: url('../assets/fonts/noto-sans-arabic-subset.woff2') format('woff2-variations');
-  font-weight: 100 900;
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('../assets/fonts/ibm-plex-sans-arabic-400.woff2') format('woff2');
+  font-weight: 400;
   font-display: swap;
-  /* U+FB50-FDFF (Arabic Presentation Forms-A) is omitted: it was dropped from the
-     subset in tools/build-fonts.sh to fit the font size budget (it's a legacy
-     compatibility block ordinary authored Arabic text never uses), so the glyphs
-     genuinely aren't in noto-sans-arabic-subset.woff2. Declaring it here would make
-     the browser select this face for that block and draw tofu instead of falling
-     back. Don't restore it without also restoring the glyphs. */
-  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FE70-FEFF;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('../assets/fonts/ibm-plex-sans-arabic-600.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('../assets/fonts/ibm-plex-sans-arabic-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
 }
 
 :root {
@@ -65,7 +89,12 @@
   --chart-5: light-dark(#e34948, #e66767); /* red */
 
   --font-latin: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-arabic: 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  /* Inter sits second on purpose. IBM Plex Sans Arabic's unicode-range claims no
+     Latin, so the Latin runs embedded in Arabic sentences — HTML, Figma, GitHub,
+     aDawliah — fall through to the next family. Without Inter here they landed on
+     whatever system font came next, so the same word was set in one typeface on
+     the English page and another on the Arabic one. */
+  --font-arabic: 'IBM Plex Sans Arabic', 'Inter', 'Segoe UI', Tahoma, sans-serif;
 
   --text-sm: clamp(0.82rem, 0.79rem + 0.14vw, 0.9rem);
   --text-base: clamp(1rem, 0.96rem + 0.2vw, 1.08rem);

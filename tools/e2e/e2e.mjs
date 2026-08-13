@@ -166,6 +166,109 @@ await group('B. language switching', async () => {
   await page.close();
 });
 
+// ─────────────────────────────────────────── B2. Arabic typography + lazy loading
+await group('B2. Arabic font is IBM Plex and loads only when needed', async () => {
+  // English visit must not pull a single Arabic byte.
+  const en = await ctx.newPage();
+  const enFonts = [];
+  en.on('request', (r) => { if (/\.woff2$/.test(r.url())) enFonts.push(r.url().split('/').pop()); });
+  await en.goto(BASE + '/', { waitUntil: 'networkidle' });
+  await en.waitForTimeout(400);
+  check('English visit fetches no Arabic font',
+    enFonts.every((f) => !f.includes('arabic')), `fetched: ${enFonts.join(', ') || 'none'}`);
+  check('English visit still fetches Inter', enFonts.some((f) => f.includes('inter')),
+    `fetched: ${enFonts.join(', ') || 'none'}`);
+  await en.close();
+
+  // Arabic visit pulls the Arabic weights the page actually paints.
+  const ar = await ctx.newPage();
+  const arFonts = [];
+  ar.on('request', (r) => { if (/\.woff2$/.test(r.url())) arFonts.push(r.url().split('/').pop()); });
+  await ar.goto(`${BASE}/?lang=ar`, { waitUntil: 'networkidle' });
+  await ar.waitForTimeout(600);
+  check('Arabic visit fetches IBM Plex Sans Arabic',
+    arFonts.some((f) => f.startsWith('ibm-plex-sans-arabic')), `fetched: ${arFonts.join(', ')}`);
+  check('no stale Noto font is fetched',
+    !arFonts.some((f) => f.includes('noto')), `fetched: ${arFonts.join(', ')}`);
+  // Latin runs inside Arabic sentences must still be Inter, not a system font.
+  check('Arabic visit fetches Inter for its embedded Latin runs',
+    arFonts.some((f) => f.includes('inter')), `fetched: ${arFonts.join(', ')}`);
+
+  const latinFamily = await ar.evaluate(() => {
+    const span = document.querySelector('main [lang="en"]');
+    return span ? getComputedStyle(span).fontFamily : null;
+  });
+  check('an embedded Latin run resolves through the Arabic stack',
+    latinFamily === null || latinFamily.includes('Inter'), `${latinFamily}`);
+
+  const applied = await ar.evaluate(() => {
+    const fam = (el) => getComputedStyle(el).fontFamily;
+    const h = document.querySelector('h1');
+    const p = document.querySelector('main p');
+    return { body: fam(document.body), h1: fam(h), para: fam(p),
+             h1weight: getComputedStyle(h).fontWeight };
+  });
+  for (const [where, value] of Object.entries({ body: applied.body, h1: applied.h1, paragraph: applied.para })) {
+    check(`${where} resolves to IBM Plex Sans Arabic`,
+      value.includes('IBM Plex Sans Arabic'), value);
+  }
+
+  // Every declared weight must be a real loaded face, not a synthesised one:
+  // faux-bolding Arabic thickens strokes and breaks the joins.
+  const loaded = await ar.evaluate(async () => {
+    await document.fonts.ready;
+    return [...document.fonts]
+      .filter((f) => f.family === 'IBM Plex Sans Arabic')
+      .map((f) => ({ weight: f.weight, status: f.status }));
+  });
+  check('IBM Plex faces are declared at 400/600/700',
+    ['400', '600', '700'].every((w) => loaded.some((f) => f.weight === w)),
+    JSON.stringify(loaded));
+  check('the heading weight is actually loaded, not synthesised',
+    loaded.some((f) => f.weight === applied.h1weight && f.status === 'loaded'),
+    `h1 wants ${applied.h1weight}; faces: ${JSON.stringify(loaded)}`);
+
+  // Shaping: Arabic must render joined. An unjoined run is much wider than a
+  // shaped one, so compare the rendered width against the isolated forms.
+  const shaping = await ar.evaluate(async () => {
+    await document.fonts.ready;
+    const make = (text) => {
+      const s = document.createElement('span');
+      s.textContent = text;
+      s.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;'
+        + "font:400 40px 'IBM Plex Sans Arabic';";
+      document.body.append(s);
+      const w = s.getBoundingClientRect().width;
+      s.remove();
+      return w;
+    };
+    // Same letters: joined word vs. explicitly isolated forms.
+    return { joined: make('مساعد'), isolated: make('م‌س‌ا‌ع‌د') };
+  });
+  check('Arabic renders with joined letterforms',
+    shaping.joined < shaping.isolated * 0.95,
+    `joined ${shaping.joined.toFixed(1)}px vs isolated ${shaping.isolated.toFixed(1)}px — `
+    + 'if these are equal the subset lost its GSUB layout features');
+  await ar.close();
+
+  // Cold-cache budget, per language. Arabic is the heavier visit because it pays
+  // for both scripts; English pays for neither Arabic weight.
+  for (const [label, url] of [['English', '/'], ['Arabic', '/?lang=ar']]) {
+    const p = await ctx.newPage();
+    let bytes = 0;
+    p.on('response', async (r) => {
+      if (/\.(woff2|css|js|html)$/.test(r.url()) || r.url().endsWith('/')) {
+        try { bytes += (await r.body()).length; } catch { /* ignore */ }
+      }
+    });
+    await p.goto(BASE + url, { waitUntil: 'networkidle' });
+    await p.waitForTimeout(600);
+    check(`${label} cold visit stays under the 300 KB budget`, bytes < 300 * 1024,
+      `${(bytes / 1024).toFixed(1)} KB`);
+    await p.close();
+  }
+});
+
 // ─────────────────────────────────────────── C. theme
 await group('C. dark / light mode', async () => {
   const page = await ctx.newPage();

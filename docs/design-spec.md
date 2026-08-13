@@ -131,10 +131,22 @@ form fields. Every gated pair is verified by a contrast script rather than by ey
 weight match rather than their nominal point size — Arabic typically needs a slightly larger
 size to sit correctly next to Latin, applied via `[lang="ar"]` on the root.
 
-- Latin: Inter, self-hosted WOFF2, with a system-UI fallback stack.
-- Arabic: Noto Sans Arabic, self-hosted WOFF2 — the same family as the CV PDFs.
+- Latin: Inter, self-hosted WOFF2 variable, with a system-UI fallback stack.
+- Arabic: IBM Plex Sans Arabic, self-hosted WOFF2 at three static weights.
 
-Both are variable fonts, so one file per script covers the entire weight range.
+Inter is variable, so one file covers its whole weight range. IBM Plex Sans Arabic has no
+variable build, so each weight is a separate face; only the three the design actually paints
+are shipped — 400 for body copy, 600 for UI labels, 700 for headings and `<th>`, which default
+to bold. Shipping fewer would leave the browser to synthesise the missing weight, and faux-bold
+thickens Arabic strokes in a way that damages the joins.
+
+Inter is second in the Arabic stack, not absent from it. IBM Plex Sans Arabic's `unicode-range`
+claims no Latin, so the Latin runs embedded in Arabic sentences fall through to the next family;
+without Inter there they landed on an arbitrary system font, and the same word was set in one
+typeface on the English page and another on the Arabic one.
+
+The downloadable CV PDFs remain set in Noto Sans Arabic, matching the owner's master documents
+rather than the site.
 
 Each `@font-face` declares a `unicode-range`. This is not a micro-optimisation: it means a
 visitor reading the English page never downloads the Arabic font at all, and vice versa. The
