@@ -58,18 +58,22 @@
       <fieldset class="direction-control">
         <legend data-i18n="controls.direction.legend">Preview direction</legend>
         <label class="choice">
-          <input type="radio" name="dir-override" value="ltr" checked>
+          <input type="radio" name="dir-override" value="auto" checked>
+          <span data-i18n="controls.direction.auto">Follow the page</span>
+        </label>
+        <label class="choice">
+          <input type="radio" name="dir-override" value="ltr">
           <span data-i18n="controls.direction.ltr">Left to right</span>
         </label>
         <label class="choice">
           <input type="radio" name="dir-override" value="rtl">
           <span data-i18n="controls.direction.rtl">Right to left</span>
         </label>
-        <p class="direction-control__hint" data-i18n="controls.direction.hint">Applies to the gallery below only, independent of the page language — use it to inspect RTL behaviour without switching languages.</p>
+        <p class="direction-control__hint" data-i18n="controls.direction.hint">The gallery follows the page language by default. Pin it left-to-right or right-to-left to inspect a component in the other direction without switching languages.</p>
       </fieldset>
     </div>
 
-    <div id="gallery" dir="ltr">
+    <div id="gallery">
 
       <section id="buttons" class="section" aria-labelledby="buttons-title">
         <div class="container">

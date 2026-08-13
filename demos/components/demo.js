@@ -32,11 +32,16 @@ function announce(key, english) {
 }
 
 // Direction override: applies only to the gallery container, so a reviewer can
-// inspect RTL component behaviour without switching the page language.
+// inspect a component in the other direction without switching the page
+// language. The default is "auto", which carries NO dir attribute at all, so
+// the gallery inherits from <html> and follows the page. Pinning the gallery to
+// a direction by default would strand an Arabic reader in an LTR gallery.
 const gallery = document.querySelector('#gallery');
 for (const radio of document.querySelectorAll('input[name="dir-override"]')) {
   radio.addEventListener('change', () => {
-    if (radio.checked) gallery.dir = radio.value;
+    if (!radio.checked) return;
+    if (radio.value === 'auto') gallery.removeAttribute('dir');
+    else gallery.dir = radio.value;
   });
 }
 
