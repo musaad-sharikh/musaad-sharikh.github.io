@@ -453,3 +453,177 @@
 .dialog::backdrop { background: rgb(0 0 0 / 45%); }
 
 .dialog__actions { display: flex; justify-content: flex-end; gap: var(--space-3); margin-block-start: var(--space-5); }
+
+/* ------------------------------------------------------------------------
+   Demo-only: demos/commerce.
+   ------------------------------------------------------------------------ */
+
+.cart-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 1.25rem;
+  min-block-size: 1.25rem;
+  padding-inline: 0.25rem;
+  margin-inline-start: var(--space-1);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--space-5);
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.product-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  font-size: var(--text-2xl);
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+}
+
+.product-card__name { margin: 0; font-size: var(--text-base); }
+
+.product-card__price { margin: 0; color: var(--color-text-muted); font-size: var(--text-sm); }
+
+/* Cart drawer — a native <dialog> pinned to the inline-end edge, so
+   focus trapping, Escape handling, and focus restoration come from the
+   platform. Anchoring with inset-inline-end (rather than a physical side)
+   is what makes it open from the correct edge under both LTR and RTL. */
+.drawer {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  margin: 0;
+  max-inline-size: min(90vw, 26rem);
+  inline-size: 100%;
+  max-block-size: 100vh;
+  padding: var(--space-5);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 0;
+  border-inline-start: 1px solid var(--color-border);
+  box-shadow: var(--shadow-1);
+  overflow-y: auto;
+}
+
+/* Specificity beats the UA sheet's `dialog[open] { display: block }' so the
+   flex layout below actually applies while the drawer is open. */
+.drawer[open] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.drawer::backdrop { background: rgb(0 0 0 / 45%); }
+
+.drawer__header { display: flex; align-items: center; justify-content: space-between; }
+
+.drawer__header h2 { margin: 0; font-size: var(--text-lg); }
+
+.drawer__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg);
+  cursor: pointer;
+}
+
+.cart-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow-y: auto;
+}
+
+.cart-line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-block: var(--space-2);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.cart-line__name { flex: 1 1 auto; font-size: var(--text-sm); }
+
+.cart-line__qty { display: inline-flex; align-items: center; gap: var(--space-1); }
+
+.stepper__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  cursor: pointer;
+}
+
+.cart-line__qty-value { min-inline-size: 1.5rem; text-align: center; }
+
+.cart-line__price { min-inline-size: 4rem; text-align: end; }
+
+.cart-line__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg);
+  cursor: pointer;
+}
+
+.cart-line__remove:hover { color: var(--color-text); border-color: var(--color-border-strong); }
+
+.cart-subtotal {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  padding-block-start: var(--space-3);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.checkout-summary { min-block-size: 1.5em; color: var(--color-text); font-weight: 600; }
+
+.demo-success {
+  padding: var(--space-3) var(--space-4);
+  margin-block-start: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-weight: 600;
+}

@@ -44,12 +44,23 @@ const isRichVariant = (k) => k.endsWith('#html');
 
 // Read directly by mountThemeToggle (js/theme.js) rather than via a data-i18n-attr
 // in the markup, so the parity check below would otherwise flag them as orphaned.
-// 'copy.done'/'copy.failed' are read the same way by demo.js's clipboard handler
-// (js/i18n.js and js/theme.js are shared code with no page-specific announcement
-// hooks, so each demo page's own announce() reads its dictionary directly).
+// 'copy.done'/'copy.failed' (demos/components) and 'checkout.errorSummary' and the
+// three 'cart.line.*Label' keys (demos/commerce) are read the same way, by each
+// page's own demo.js, for text built at runtime rather than applied by the shared
+// i18n engine (the per-line cart controls fold the product name into their label,
+// which the engine's fixed key-per-element model can't express).
 // This allow-list is the only permitted exemption — anything else missing from the
 // markup is a genuine orphan and must be fixed rather than exempted.
-const DYNAMIC_KEYS = new Set(['theme.toLight', 'theme.toDark', 'copy.done', 'copy.failed']);
+const DYNAMIC_KEYS = new Set([
+  'theme.toLight',
+  'theme.toDark',
+  'copy.done',
+  'copy.failed',
+  'cart.line.decreaseLabel',
+  'cart.line.increaseLabel',
+  'cart.line.removeLabel',
+  'checkout.errorSummary',
+]);
 
 for (const [htmlPath, dictPath] of PAGES) {
   test(`${htmlPath}: every key has an Arabic translation`, async (t) => {

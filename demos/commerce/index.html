@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Commerce Flow — Musaad Muhammad</title>
+  <meta name="description" content="A bilingual shopping slice — product grid, cart drawer, and a checkout form with accessible, translated validation. Personal concept project, not client work.">
+  <link rel="stylesheet" href="../../css/tokens.css">
+  <link rel="stylesheet" href="../../css/base.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <link rel="stylesheet" href="../../css/print.css" media="print">
+  <script>
+    try {
+      const t = localStorage.getItem('portfolio:theme');
+      if (t) document.documentElement.dataset.theme = t;
+      const q = new URLSearchParams(location.search).get('lang');
+      const l = q === 'ar' || q === 'en' ? q : localStorage.getItem('portfolio:lang');
+      if (l === 'ar') { document.documentElement.lang = 'ar'; document.documentElement.dir = 'rtl'; }
+    } catch {}
+  </script>
+  <script type="module" src="demo.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip.label">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Primary">
+      <a class="action" href="../../index.html" data-i18n="back.toPortfolio">Back to portfolio</a>
+      <div class="nav__toggles">
+        <button type="button" id="cart-trigger" class="toggle" data-modal-open="cart-drawer" data-i18n-attr="aria-label:cart.trigger" aria-label="Open cart">
+          🛒<span id="cart-badge" class="cart-badge" aria-hidden="true">0</span>
+        </button>
+        <button type="button" id="lang-toggle" class="toggle" aria-pressed="false" aria-label="Switch to Arabic">ع</button>
+        <button type="button" id="theme-toggle" class="toggle" aria-pressed="false" aria-label="Switch to dark theme">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <p class="visually-hidden" role="status" aria-live="polite">
+    <span data-i18n="cart.countLabel">Items in cart:</span> <span id="cart-count-live">0</span>
+  </p>
+
+  <main id="main">
+    <div class="container demo-intro">
+      <h1 data-i18n="page.title">Commerce Flow</h1>
+      <p class="badge" data-i18n="badge.label">Personal concept project — not client work</p>
+      <p class="demo-intro__text" data-i18n="page.intro">A small working shopping slice: a product grid, a persistent cart, and a checkout form with accessible, translated validation. All products below are synthetic sample data.</p>
+    </div>
+
+    <section id="products" class="section" aria-labelledby="products-title">
+      <div class="container">
+        <h2 class="section__title" id="products-title" data-i18n="products.title">Products</h2>
+        <div class="product-grid">
+
+          <article class="product-card">
+            <div class="product-card__icon" aria-hidden="true">☕</div>
+            <h3 class="product-card__name" data-i18n="product.mug.name">Ceramic Mug</h3>
+            <p class="product-card__price" data-price-for="p-mug"></p>
+            <button type="button" class="btn btn--secondary" data-add-to-cart="p-mug" data-i18n="cart.add">Add to cart</button>
+          </article>
+
+          <article class="product-card">
+            <div class="product-card__icon" aria-hidden="true">📓</div>
+            <h3 class="product-card__name" data-i18n="product.notebook.name">Ruled Notebook</h3>
+            <p class="product-card__price" data-price-for="p-notebook"></p>
+            <button type="button" class="btn btn--secondary" data-add-to-cart="p-notebook" data-i18n="cart.add">Add to cart</button>
+          </article>
+
+          <article class="product-card">
+            <div class="product-card__icon" aria-hidden="true">💡</div>
+            <h3 class="product-card__name" data-i18n="product.lamp.name">Desk Lamp</h3>
+            <p class="product-card__price" data-price-for="p-lamp"></p>
+            <button type="button" class="btn btn--secondary" data-add-to-cart="p-lamp" data-i18n="cart.add">Add to cart</button>
+          </article>
+
+          <article class="product-card">
+            <div class="product-card__icon" aria-hidden="true">🎒</div>
+            <h3 class="product-card__name" data-i18n="product.backpack.name">Canvas Backpack</h3>
+            <p class="product-card__price" data-price-for="p-backpack"></p>
+            <button type="button" class="btn btn--secondary" data-add-to-cart="p-backpack" data-i18n="cart.add">Add to cart</button>
+          </article>
+
+          <article class="product-card">
+            <div class="product-card__icon" aria-hidden="true">🧴</div>
+            <h3 class="product-card__name" data-i18n="product.bottle.name">Steel Water Bottle</h3>
+            <p class="product-card__price" data-price-for="p-bottle"></p>
+            <button type="button" class="btn btn--secondary" data-add-to-cart="p-bottle" data-i18n="cart.add">Add to cart</button>
+          </article>
+
+          <article class="product-card">
+            <div class="product-card__icon" aria-hidden="true">🎧</div>
+            <h3 class="product-card__name" data-i18n="product.headphones.name">Wireless Headphones</h3>
+            <p class="product-card__price" data-price-for="p-headphones"></p>
+            <button type="button" class="btn btn--secondary" data-add-to-cart="p-headphones" data-i18n="cart.add">Add to cart</button>
+          </article>
+
+          <article class="product-card">
+            <div class="product-card__icon" aria-hidden="true">🌵</div>
+            <h3 class="product-card__name" data-i18n="product.plant.name">Potted Succulent</h3>
+            <p class="product-card__price" data-price-for="p-plant"></p>
+            <button type="button" class="btn btn--secondary" data-add-to-cart="p-plant" data-i18n="cart.add">Add to cart</button>
+          </article>
+
+          <article class="product-card">
+            <div class="product-card__icon" aria-hidden="true">🕯️</div>
+            <h3 class="product-card__name" data-i18n="product.candle.name">Soy Candle</h3>
+            <p class="product-card__price" data-price-for="p-candle"></p>
+            <button type="button" class="btn btn--secondary" data-add-to-cart="p-candle" data-i18n="cart.add">Add to cart</button>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="checkout" class="section" aria-labelledby="checkout-title">
+      <div class="container">
+        <h2 class="section__title" id="checkout-title" data-i18n="checkout.title">Checkout</h2>
+        <p data-i18n="checkout.note">Demonstration checkout — no order is placed and no payment is collected.</p>
+
+        <form id="checkout-form" novalidate>
+          <div class="field">
+            <label class="field__label" for="checkout-name" data-i18n="checkout.name.label">Full name</label>
+            <input class="field__control" type="text" id="checkout-name" name="name" required autocomplete="name">
+            <p class="field__error" id="checkout-name-error" data-i18n="checkout.name.error" hidden>Enter your full name.</p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="checkout-email" data-i18n="checkout.email.label">Email address</label>
+            <input class="field__control" type="email" id="checkout-email" name="email" required autocomplete="email">
+            <p class="field__error" id="checkout-email-error-required" data-i18n="checkout.email.error.required" hidden>Enter your email address.</p>
+            <p class="field__error" id="checkout-email-error-invalid" data-i18n="checkout.email.error.invalid" hidden>Enter a valid email address.</p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="checkout-address" data-i18n="checkout.address.label">Street address</label>
+            <input class="field__control" type="text" id="checkout-address" name="address" required autocomplete="street-address">
+            <p class="field__error" id="checkout-address-error" data-i18n="checkout.address.error" hidden>Enter your street address.</p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="checkout-city" data-i18n="checkout.city.label">City</label>
+            <input class="field__control" type="text" id="checkout-city" name="city" required autocomplete="address-level2">
+            <p class="field__error" id="checkout-city-error" data-i18n="checkout.city.error" hidden>Enter your city.</p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="checkout-postal" data-i18n="checkout.postal.label">Postal code</label>
+            <input class="field__control" type="text" id="checkout-postal" name="postal" required autocomplete="postal-code" inputmode="numeric">
+            <p class="field__error" id="checkout-postal-error" data-i18n="checkout.postal.error" hidden>Enter your postal code.</p>
+          </div>
+
+          <p class="checkout-summary" id="checkout-summary" aria-live="polite"></p>
+
+          <button type="submit" class="btn btn--primary" data-i18n="checkout.submit">Place demo order</button>
+
+          <p class="demo-success" id="checkout-success" role="status" aria-live="polite" hidden data-i18n="checkout.success">Thank you — this is a demo checkout. No order was placed.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="cart-drawer" class="drawer" aria-labelledby="cart-drawer-title">
+    <div class="drawer__header">
+      <h2 id="cart-drawer-title" data-i18n="cart.title">Your cart</h2>
+      <button type="button" class="drawer__close" data-modal-close data-i18n-attr="aria-label:cart.close" aria-label="Close cart">×</button>
+    </div>
+    <p id="cart-empty" data-i18n="cart.empty">Your cart is empty.</p>
+    <ul id="cart-lines" class="cart-lines"></ul>
+    <p class="cart-subtotal">
+      <span data-i18n="cart.subtotal.label">Subtotal</span>
+      <span id="cart-subtotal-value"></span>
+    </p>
+    <button type="button" id="cart-checkout-btn" class="btn btn--primary" data-i18n="cart.checkoutCta">Proceed to checkout</button>
+  </dialog>
+
+  <div class="visually-hidden" role="status" aria-live="polite" id="i18n-status"></div>
+</body>
+</html>
