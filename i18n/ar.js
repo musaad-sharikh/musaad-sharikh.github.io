@@ -115,4 +115,7 @@ export default {
 
   'footer.source': 'الاطّلاع على الكود المصدري على GitHub',
   'footer.source#html': 'الاطّلاع على الكود المصدري على <span lang="en" dir="ltr">GitHub</span>',
+
+  'theme.toLight': 'التبديل إلى المظهر الفاتح',
+  'theme.toDark': 'التبديل إلى المظهر الداكن',
 };

@@ -42,6 +42,12 @@ const PAGES = [
 
 const isRichVariant = (k) => k.endsWith('#html');
 
+// Read directly by mountThemeToggle (js/theme.js) rather than via a data-i18n-attr
+// in the markup, so the parity check below would otherwise flag them as orphaned.
+// This allow-list is the only permitted exemption — anything else missing from the
+// markup is a genuine orphan and must be fixed rather than exempted.
+const DYNAMIC_KEYS = new Set(['theme.toLight', 'theme.toDark']);
+
 for (const [htmlPath, dictPath] of PAGES) {
   test(`${htmlPath}: every key has an Arabic translation`, async (t) => {
     let html;
@@ -58,7 +64,9 @@ for (const [htmlPath, dictPath] of PAGES) {
     const missing = [...htmlKeys].filter((k) => !dictKeys.has(k));
     // #html keys are rich variants of a plain key, not markup targets of their own,
     // so they are exempt from the orphan check.
-    const orphaned = [...dictKeys].filter((k) => !isRichVariant(k) && !htmlKeys.has(k));
+    const orphaned = [...dictKeys]
+      .filter((k) => !isRichVariant(k) && !htmlKeys.has(k))
+      .filter((k) => !DYNAMIC_KEYS.has(k));
     // A rich variant can never be the only translation for a key.
     const richWithoutPlain = [...dictKeys]
       .filter(isRichVariant)
