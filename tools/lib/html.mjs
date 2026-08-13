@@ -1,7 +1,7 @@
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, extname } from 'node:path';
 
-const SKIP_DIRS = new Set(['.git', 'node_modules', 'assets', '.superpowers']);
+const SKIP_DIRS = new Set(['.git', 'node_modules', '.superpowers']);
 const BINARY_EXT = new Set(['.pdf', '.woff2', '.png', '.jpg', '.jpeg', '.ico', '.ttf']);
 
 /** Every text file in the tree, as { path, text }. */
