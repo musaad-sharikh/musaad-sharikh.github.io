@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Component Library — Musaad Muhammad</title>
+  <meta name="description" content="A bilingual, hand-built component gallery: buttons, form fields, tabs, dialogs and toasts, shown in light and dark and in both reading directions. Personal concept project, not client work.">
+  <link rel="stylesheet" href="../../css/tokens.css">
+  <link rel="stylesheet" href="../../css/base.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <link rel="stylesheet" href="../../css/print.css" media="print">
+  <script>
+    try {
+      const t = localStorage.getItem('portfolio:theme');
+      if (t) document.documentElement.dataset.theme = t;
+      const q = new URLSearchParams(location.search).get('lang');
+      const l = q === 'ar' || q === 'en' ? q : localStorage.getItem('portfolio:lang');
+      if (l === 'ar') { document.documentElement.lang = 'ar'; document.documentElement.dir = 'rtl'; }
+    } catch {}
+  </script>
+  <script type="module" src="demo.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip.label">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Primary">
+      <a class="action" href="../../index.html" data-i18n="back.toPortfolio">Back to portfolio</a>
+      <div class="nav__toggles">
+        <button type="button" id="lang-toggle" class="toggle" aria-pressed="false" aria-label="Switch to Arabic">ع</button>
+        <button type="button" id="theme-toggle" class="toggle" aria-pressed="false" aria-label="Switch to dark theme">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="container demo-intro">
+      <h1 data-i18n="page.title">Component Library</h1>
+      <p class="badge" data-i18n="badge.label">Personal concept project — not client work</p>
+      <p class="demo-intro__text" data-i18n="page.intro">A gallery of the interface components used across this site, built from the same design tokens as the portfolio itself. Every example ships with the markup that produces it.</p>
+
+      <fieldset class="direction-control">
+        <legend data-i18n="controls.direction.legend">Preview direction</legend>
+        <label class="choice">
+          <input type="radio" name="dir-override" value="ltr" checked>
+          <span data-i18n="controls.direction.ltr">Left to right</span>
+        </label>
+        <label class="choice">
+          <input type="radio" name="dir-override" value="rtl">
+          <span data-i18n="controls.direction.rtl">Right to left</span>
+        </label>
+        <p class="direction-control__hint" data-i18n="controls.direction.hint">Applies to the gallery below only, independent of the page language — use it to inspect RTL behaviour without switching languages.</p>
+      </fieldset>
+    </div>
+
+    <div id="gallery" dir="ltr">
+
+      <section id="buttons" class="section" aria-labelledby="buttons-title">
+        <div class="container">
+          <h2 class="section__title" id="buttons-title" data-i18n="section.buttons.title">Buttons</h2>
+          <p data-i18n="section.buttons.desc">Four button variants, including the disabled state.</p>
+          <div class="demo-example">
+            <button type="button" class="btn btn--primary" data-i18n="demo.btn.primary">Primary action</button>
+            <button type="button" class="btn btn--secondary" data-i18n="demo.btn.secondary">Secondary action</button>
+            <button type="button" class="btn btn--ghost" data-i18n="demo.btn.ghost">Ghost action</button>
+            <button type="button" class="btn btn--primary" disabled data-i18n="demo.btn.disabled">Disabled action</button>
+          </div>
+          <div class="snippet">
+            <pre><code id="snippet-buttons">&lt;button class="btn btn--primary"&gt;Primary action&lt;/button&gt;
+&lt;button class="btn btn--secondary"&gt;Secondary action&lt;/button&gt;
+&lt;button class="btn btn--ghost"&gt;Ghost action&lt;/button&gt;
+&lt;button class="btn btn--primary" disabled&gt;Disabled action&lt;/button&gt;</code></pre>
+            <button type="button" class="copy-button" data-copy="snippet-buttons" data-i18n="copy.button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="field" class="section" aria-labelledby="field-title">
+        <div class="container">
+          <h2 class="section__title" id="field-title" data-i18n="section.field.title">Text Input</h2>
+          <p data-i18n="section.field.desc">Labeled fields with hint and error messaging.</p>
+          <div class="demo-example demo-example--stack">
+            <div class="field">
+              <label class="field__label" for="input-email" data-i18n="demo.field.email.label">Email address</label>
+              <input class="field__control" type="email" id="input-email" aria-describedby="email-hint">
+              <p class="field__hint" id="email-hint" data-i18n="demo.field.email.hint">We'll use this only to send your receipt.</p>
+            </div>
+            <div class="field field--invalid">
+              <label class="field__label" for="input-password" data-i18n="demo.field.password.label">Password</label>
+              <input class="field__control" type="password" id="input-password" aria-invalid="true" aria-describedby="password-error">
+              <p class="field__error" id="password-error" data-i18n="demo.field.password.error">Password must be at least 8 characters.</p>
+            </div>
+          </div>
+          <div class="snippet">
+            <pre><code id="snippet-field">&lt;label for="email"&gt;Email address&lt;/label&gt;
+&lt;input type="email" id="email" aria-describedby="email-hint"&gt;
+&lt;p id="email-hint"&gt;We'll use this only to send your receipt.&lt;/p&gt;
+
+&lt;label for="password"&gt;Password&lt;/label&gt;
+&lt;input type="password" id="password" aria-invalid="true" aria-describedby="password-error"&gt;
+&lt;p id="password-error"&gt;Password must be at least 8 characters.&lt;/p&gt;</code></pre>
+            <button type="button" class="copy-button" data-copy="snippet-field" data-i18n="copy.button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="select" class="section" aria-labelledby="select-title">
+        <div class="container">
+          <h2 class="section__title" id="select-title" data-i18n="section.select.title">Select</h2>
+          <p data-i18n="section.select.desc">A native select styled to match the design tokens.</p>
+          <div class="demo-example demo-example--stack">
+            <div class="field">
+              <label class="field__label" for="select-country" data-i18n="demo.select.label">Country</label>
+              <select class="field__control" id="select-country">
+                <option value="" data-i18n="demo.select.placeholder">Choose a country</option>
+                <option value="sa" data-i18n="demo.select.sa">Saudi Arabia</option>
+                <option value="ae" data-i18n="demo.select.ae">United Arab Emirates</option>
+                <option value="other" data-i18n="demo.select.other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="snippet">
+            <pre><code id="snippet-select">&lt;label for="country"&gt;Country&lt;/label&gt;
+&lt;select id="country"&gt;
+  &lt;option value=""&gt;Choose a country&lt;/option&gt;
+  &lt;option value="sa"&gt;Saudi Arabia&lt;/option&gt;
+  &lt;option value="ae"&gt;United Arab Emirates&lt;/option&gt;
+  &lt;option value="other"&gt;Other&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+            <button type="button" class="copy-button" data-copy="snippet-select" data-i18n="copy.button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="choices" class="section" aria-labelledby="choices-title">
+        <div class="container">
+          <h2 class="section__title" id="choices-title" data-i18n="section.choices.title">Checkboxes &amp; Radio Buttons</h2>
+          <p data-i18n="section.choices.desc">Grouped controls with fieldset and legend for screen readers.</p>
+          <div class="demo-example demo-example--stack">
+            <fieldset class="choice-group">
+              <legend data-i18n="demo.choices.notify.legend">Notification preferences</legend>
+              <label class="choice">
+                <input type="checkbox" name="notify" value="email" checked>
+                <span data-i18n="demo.choices.notify.email">Email updates</span>
+              </label>
+              <label class="choice">
+                <input type="checkbox" name="notify" value="sms">
+                <span data-i18n="demo.choices.notify.sms">SMS alerts</span>
+              </label>
+            </fieldset>
+            <fieldset class="choice-group">
+              <legend data-i18n="demo.choices.contact.legend">Preferred contact method</legend>
+              <label class="choice">
+                <input type="radio" name="contact" value="email" checked>
+                <span data-i18n="demo.choices.contact.email">Email</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="contact" value="phone">
+                <span data-i18n="demo.choices.contact.phone">Phone</span>
+              </label>
+            </fieldset>
+          </div>
+          <div class="snippet">
+            <pre><code id="snippet-choices">&lt;fieldset&gt;
+  &lt;legend&gt;Notification preferences&lt;/legend&gt;
+  &lt;label&gt;&lt;input type="checkbox" name="notify" value="email" checked&gt; Email updates&lt;/label&gt;
+  &lt;label&gt;&lt;input type="checkbox" name="notify" value="sms"&gt; SMS alerts&lt;/label&gt;
+&lt;/fieldset&gt;</code></pre>
+            <button type="button" class="copy-button" data-copy="snippet-choices" data-i18n="copy.button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="card" class="section" aria-labelledby="card-title">
+        <div class="container">
+          <h2 class="section__title" id="card-title" data-i18n="section.card.title">Card</h2>
+          <p data-i18n="section.card.desc">A content card built from the shared card styles.</p>
+          <div class="demo-example">
+            <article class="card">
+              <h3 data-i18n="demo.card.title">Sample Card</h3>
+              <p data-i18n="demo.card.body">Cards group related content with a consistent surface, border, and corner radius.</p>
+            </article>
+          </div>
+          <div class="snippet">
+            <pre><code id="snippet-card">&lt;article class="card"&gt;
+  &lt;h3&gt;Sample Card&lt;/h3&gt;
+  &lt;p&gt;Cards group related content with a consistent surface, border, and corner radius.&lt;/p&gt;
+&lt;/article&gt;</code></pre>
+            <button type="button" class="copy-button" data-copy="snippet-card" data-i18n="copy.button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="tabs" class="section" aria-labelledby="tabs-title">
+        <div class="container">
+          <h2 class="section__title" id="tabs-title" data-i18n="section.tabs.title">Tabs</h2>
+          <p data-i18n="section.tabs.desc">WAI-ARIA tabs with roving tabindex. Arrow-key direction follows the gallery's current text direction above, not the page language.</p>
+          <div class="demo-example demo-example--stack">
+            <div class="tabs">
+              <div role="tablist" class="tabs__list" data-i18n-attr="aria-label:section.tabs.title" aria-label="Tabs">
+                <button type="button" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true" tabindex="0" class="tabs__tab" data-i18n="demo.tabs.tab1">Overview</button>
+                <button type="button" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1" class="tabs__tab" data-i18n="demo.tabs.tab2">Specifications</button>
+                <button type="button" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1" class="tabs__tab" data-i18n="demo.tabs.tab3">Reviews</button>
+              </div>
+              <div role="tabpanel" id="panel-1" aria-labelledby="tab-1" class="tabs__panel" tabindex="0">
+                <p data-i18n="demo.tabs.panel1">A short overview panel. Use the arrow keys to move between tabs.</p>
+              </div>
+              <div role="tabpanel" id="panel-2" aria-labelledby="tab-2" class="tabs__panel" tabindex="0" hidden>
+                <p data-i18n="demo.tabs.panel2">Specification details would appear here.</p>
+              </div>
+              <div role="tabpanel" id="panel-3" aria-labelledby="tab-3" class="tabs__panel" tabindex="0" hidden>
+                <p data-i18n="demo.tabs.panel3">Reviews would appear here.</p>
+              </div>
+            </div>
+          </div>
+          <div class="snippet">
+            <pre><code id="snippet-tabs">&lt;div role="tablist" aria-label="Tabs"&gt;
+  &lt;button role="tab" aria-controls="panel-1" aria-selected="true" tabindex="0"&gt;Overview&lt;/button&gt;
+  &lt;button role="tab" aria-controls="panel-2" aria-selected="false" tabindex="-1"&gt;Specifications&lt;/button&gt;
+&lt;/div&gt;
+&lt;div role="tabpanel" id="panel-1"&gt;…&lt;/div&gt;
+&lt;div role="tabpanel" id="panel-2" hidden&gt;…&lt;/div&gt;</code></pre>
+            <button type="button" class="copy-button" data-copy="snippet-tabs" data-i18n="copy.button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="accordion" class="section" aria-labelledby="accordion-title">
+        <div class="container">
+          <h2 class="section__title" id="accordion-title" data-i18n="section.accordion.title">Accordion</h2>
+          <p data-i18n="section.accordion.desc">Native disclosure elements — no JavaScript required.</p>
+          <div class="demo-example demo-example--stack">
+            <div class="accordion">
+              <details class="accordion__item" open>
+                <summary data-i18n="demo.accordion.q1">What is this component library?</summary>
+                <p data-i18n="demo.accordion.a1">A set of demo components built from the same design tokens as the rest of the site.</p>
+              </details>
+              <details class="accordion__item">
+                <summary data-i18n="demo.accordion.q2">Is this used by real clients?</summary>
+                <p data-i18n="demo.accordion.a2">No — this is a personal concept project, not client work.</p>
+              </details>
+            </div>
+          </div>
+          <div class="snippet">
+            <pre><code id="snippet-accordion">&lt;details open&gt;
+  &lt;summary&gt;What is this component library?&lt;/summary&gt;
+  &lt;p&gt;A set of demo components built from the same design tokens as the rest of the site.&lt;/p&gt;
+&lt;/details&gt;</code></pre>
+            <button type="button" class="copy-button" data-copy="snippet-accordion" data-i18n="copy.button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="toast" class="section" aria-labelledby="toast-title">
+        <div class="container">
+          <h2 class="section__title" id="toast-title" data-i18n="section.toast.title">Toast</h2>
+          <p data-i18n="section.toast.desc">A transient status message, announced to screen readers.</p>
+          <div class="demo-example">
+            <button type="button" id="toast-trigger" class="btn btn--secondary" data-i18n="demo.toast.trigger">Show toast</button>
+            <div id="toast-box" class="toast" role="status" aria-live="polite" hidden>
+              <span data-i18n="demo.toast.message">Preferences saved.</span>
+            </div>
+          </div>
+          <div class="snippet">
+            <pre><code id="snippet-toast">&lt;div class="toast" role="status" aria-live="polite"&gt;
+  Preferences saved.
+&lt;/div&gt;</code></pre>
+            <button type="button" class="copy-button" data-copy="snippet-toast" data-i18n="copy.button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="modal" class="section" aria-labelledby="modal-section-title">
+        <div class="container">
+          <h2 class="section__title" id="modal-section-title" data-i18n="section.modal.title">Modal Dialog</h2>
+          <p data-i18n="section.modal.desc">A native dialog element with built-in focus trapping.</p>
+          <div class="demo-example">
+            <button type="button" data-modal-open="demo-dialog" class="btn btn--primary" data-i18n="demo.modal.trigger">Open dialog</button>
+            <dialog id="demo-dialog" class="dialog" aria-labelledby="demo-dialog-title">
+              <h2 id="demo-dialog-title" data-i18n="demo.modal.title">Confirm action</h2>
+              <p data-i18n="demo.modal.body">This is a demo dialog. Focus is trapped inside it and returns to the trigger button when it closes.</p>
+              <div class="dialog__actions">
+                <button type="button" class="btn btn--secondary" data-modal-close data-i18n="demo.modal.cancel">Cancel</button>
+                <button type="button" class="btn btn--primary" data-modal-close data-i18n="demo.modal.confirm">Confirm</button>
+              </div>
+            </dialog>
+          </div>
+          <div class="snippet">
+            <pre><code id="snippet-modal">&lt;dialog id="demo-dialog" aria-labelledby="demo-dialog-title"&gt;
+  &lt;h2 id="demo-dialog-title"&gt;Confirm action&lt;/h2&gt;
+  &lt;p&gt;…&lt;/p&gt;
+  &lt;button data-modal-close&gt;Cancel&lt;/button&gt;
+  &lt;button data-modal-close&gt;Confirm&lt;/button&gt;
+&lt;/dialog&gt;
+&lt;script&gt;dialog.showModal();&lt;/script&gt;</code></pre>
+            <button type="button" class="copy-button" data-copy="snippet-modal" data-i18n="copy.button">Copy</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div class="visually-hidden" role="status" aria-live="polite" id="i18n-status"></div>
+</body>
+</html>

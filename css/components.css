@@ -221,3 +221,235 @@
   font-weight: 600;
   margin: 0;
 }
+
+/* ------------------------------------------------------------------------
+   Demo-only components, shared by demos/components and demos/commerce.
+   ------------------------------------------------------------------------ */
+
+.demo-intro { padding-block-start: var(--space-7); }
+
+.demo-intro__text { max-inline-size: var(--measure); }
+
+.demo-example {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  margin-block: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.demo-example--stack {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Code snippet + copy button, attached under each rendered example. */
+.snippet {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.snippet pre {
+  inline-size: 100%;
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  overflow-x: auto;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+.copy-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  padding-inline: var(--space-4);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.copy-button:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+/* Buttons. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  padding-inline: var(--space-5);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border: 1px solid var(--color-accent);
+}
+
+.btn--primary:hover { opacity: 0.9; }
+
+.btn--secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+}
+
+.btn--secondary:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-accent);
+  border: 1px solid transparent;
+}
+
+.btn--ghost:hover { background: var(--color-surface); }
+
+.btn:disabled { cursor: not-allowed; opacity: 0.5; }
+
+/* Form fields. */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-inline-size: 22rem;
+}
+
+.field__label { font-size: var(--text-sm); font-weight: 600; }
+
+.field__control {
+  min-block-size: 2.75rem;
+  padding-inline: var(--space-3);
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font: inherit;
+}
+
+.field__hint { margin: 0; color: var(--color-text-muted); font-size: var(--text-sm); }
+
+/* The invalid state doubles the border weight in addition to the icon and
+   bold weight on the error text below — the signal is never colour alone. */
+.field--invalid .field__control { border-width: 2px; }
+
+.field__error { margin: 0; color: var(--color-text); font-weight: 600; font-size: var(--text-sm); }
+
+.field__error::before { content: '⚠ '; }
+
+/* Checkbox / radio choice groups. */
+.choice-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+.choice-group legend { padding: 0; margin-block-end: var(--space-2); font-weight: 600; font-size: var(--text-sm); }
+
+.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+}
+
+/* Direction override control (demos/components only). */
+.direction-control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  margin-block: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.direction-control legend { padding: 0; font-weight: 600; }
+
+.direction-control__hint { flex-basis: 100%; margin: 0; color: var(--color-text-muted); font-size: var(--text-sm); }
+
+/* Tabs — WAI-ARIA tabs pattern. */
+.tabs__list { display: flex; flex-wrap: wrap; gap: var(--space-2); border-block-end: 1px solid var(--color-border); }
+
+.tabs__tab {
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  padding-inline: var(--space-4);
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 0;
+  border-block-end: 3px solid transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.tabs__tab[aria-selected='true'] {
+  color: var(--color-text);
+  border-block-end-color: var(--color-accent);
+  font-weight: 600;
+}
+
+.tabs__panel { padding-block: var(--space-4); }
+
+/* Accordion — native <details>/<summary>, no custom JS. */
+.accordion__item { padding-block: var(--space-3); border-block-end: 1px solid var(--color-border); }
+
+.accordion__item summary {
+  min-block-size: 2.75rem;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.accordion__item p { margin: var(--space-2) 0 0; color: var(--color-text-muted); }
+
+/* Toast. */
+.toast {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-text);
+  color: var(--color-bg);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-1);
+  font-size: var(--text-sm);
+}
+
+/* Native <dialog>: platform gives focus trapping, Escape handling, and
+   focus restoration to the trigger — only its appearance is styled here. */
+.dialog {
+  inline-size: min(90vw, 28rem);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+}
+
+.dialog::backdrop { background: rgb(0 0 0 / 45%); }
+
+.dialog__actions { display: flex; justify-content: flex-end; gap: var(--space-3); margin-block-start: var(--space-5); }

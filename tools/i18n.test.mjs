@@ -44,9 +44,12 @@ const isRichVariant = (k) => k.endsWith('#html');
 
 // Read directly by mountThemeToggle (js/theme.js) rather than via a data-i18n-attr
 // in the markup, so the parity check below would otherwise flag them as orphaned.
+// 'copy.done'/'copy.failed' are read the same way by demo.js's clipboard handler
+// (js/i18n.js and js/theme.js are shared code with no page-specific announcement
+// hooks, so each demo page's own announce() reads its dictionary directly).
 // This allow-list is the only permitted exemption — anything else missing from the
 // markup is a genuine orphan and must be fixed rather than exempted.
-const DYNAMIC_KEYS = new Set(['theme.toLight', 'theme.toDark']);
+const DYNAMIC_KEYS = new Set(['theme.toLight', 'theme.toDark', 'copy.done', 'copy.failed']);
 
 for (const [htmlPath, dictPath] of PAGES) {
   test(`${htmlPath}: every key has an Arabic translation`, async (t) => {
