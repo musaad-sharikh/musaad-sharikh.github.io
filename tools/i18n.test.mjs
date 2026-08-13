@@ -1,6 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile, readdir } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 import { resolveLanguage, oppositeOf, LANGS, DEFAULT_LANG } from '../js/i18n.js';
+import { extractI18nKeys } from './lib/html.mjs';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 test('query parameter wins over storage', () => {
   assert.equal(resolveLanguage({ search: '?lang=ar', stored: 'en' }), 'ar');
@@ -25,3 +31,59 @@ test('oppositeOf flips between the two supported languages', () => {
 test('exactly two languages are supported', () => {
   assert.deepEqual([...LANGS], ['en', 'ar']);
 });
+
+// [html file, arabic dictionary module]
+const PAGES = [
+  ['index.html', 'i18n/ar.js'],
+  ['demos/components/index.html', 'demos/components/ar.js'],
+  ['demos/commerce/index.html', 'demos/commerce/ar.js'],
+  ['demos/dashboard/index.html', 'demos/dashboard/ar.js'],
+];
+
+const isRichVariant = (k) => k.endsWith('#html');
+
+for (const [htmlPath, dictPath] of PAGES) {
+  test(`${htmlPath}: every key has an Arabic translation`, async (t) => {
+    let html;
+    try {
+      html = await readFile(join(ROOT, htmlPath), 'utf8');
+    } catch {
+      t.skip(`${htmlPath} not built yet`);
+      return;
+    }
+    const dict = (await import(join(ROOT, dictPath))).default;
+    const htmlKeys = extractI18nKeys(html);
+    const dictKeys = new Set(Object.keys(dict));
+
+    const missing = [...htmlKeys].filter((k) => !dictKeys.has(k));
+    // #html keys are rich variants of a plain key, not markup targets of their own,
+    // so they are exempt from the orphan check.
+    const orphaned = [...dictKeys].filter((k) => !isRichVariant(k) && !htmlKeys.has(k));
+    // A rich variant can never be the only translation for a key.
+    const richWithoutPlain = [...dictKeys]
+      .filter(isRichVariant)
+      .map((k) => k.slice(0, -'#html'.length))
+      .filter((base) => !dictKeys.has(base));
+
+    assert.deepEqual(missing, [], `no Arabic for: ${missing.join(', ')}`);
+    assert.deepEqual(orphaned, [], `Arabic with no markup: ${orphaned.join(', ')}`);
+    assert.deepEqual(richWithoutPlain, [], `#html variant without plain sibling: ${richWithoutPlain.join(', ')}`);
+    assert.ok(htmlKeys.size > 0, `${htmlPath} has no data-i18n keys`);
+  });
+
+  test(`${htmlPath}: Arabic values are actually Arabic`, async (t) => {
+    let dict;
+    try {
+      dict = (await import(join(ROOT, dictPath))).default;
+    } catch {
+      t.skip(`${dictPath} not built yet`);
+      return;
+    }
+    // Keys whose value is legitimately Latin-only (URLs, brand names, email).
+    const LATIN_OK = /^(cv\.href|.*\.url|.*\.email)$/;
+    const wrong = Object.entries(dict)
+      .filter(([k, v]) => !LATIN_OK.test(k) && !/[؀-ۿ]/.test(v))
+      .map(([k]) => k);
+    assert.deepEqual(wrong, [], `untranslated (no Arabic script): ${wrong.join(', ')}`);
+  });
+}

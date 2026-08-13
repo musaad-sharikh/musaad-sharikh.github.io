@@ -47,9 +47,14 @@ export function createI18n({ root, dictionary, statusEl = null }) {
   function applyText(lang) {
     for (const node of root.querySelectorAll('[data-i18n]')) {
       const key = node.dataset.i18n;
-      cache(node, 'text', node.textContent);
-      node.textContent = lang === 'ar' ? (dictionary[key] ?? originals.get(node).text)
-                                       : originals.get(node).text;
+      cache(node, 'text', node.textContent);   // always first
+      const original = originals.get(node).text;
+
+      if (lang !== 'ar') { node.textContent = original; continue; }
+
+      const rich = dictionary[`${key}#html`];
+      if (rich) node.innerHTML = rich;          // dictionary-only, never user input
+      else node.textContent = dictionary[key] ?? original;
     }
   }
 
