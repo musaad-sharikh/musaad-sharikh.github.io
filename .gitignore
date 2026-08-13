@@ -4,6 +4,10 @@
 .superpowers/
 
 # Local tooling scratch — never part of the published site.
-.claude/
 .playwright/
 node_modules/
+
+# Plugin scoping is a versioned decision and belongs in git. Everything else
+# under .claude/ is harness-provisioned payload that regenerates on demand.
+.claude/*
+!.claude/settings.json
