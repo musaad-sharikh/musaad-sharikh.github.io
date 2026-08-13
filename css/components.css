@@ -627,3 +627,133 @@
   color: var(--color-text);
   font-weight: 600;
 }
+
+/* ------------------------------------------------------------------------
+   Demo-only: demos/dashboard.
+   ------------------------------------------------------------------------ */
+
+.dashboard-note {
+  padding: var(--space-3) var(--space-4);
+  margin-block: var(--space-4) 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+}
+
+/* KPI row — a handful of headline numbers, per the dataviz skill's form
+   heuristic ("a handful of headline numbers -> a KPI row of stat tiles",
+   never a grouped bar chart for this job). */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--space-5);
+}
+
+.kpi-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.kpi-tile__label { font-size: var(--text-sm); color: var(--color-text-muted); }
+
+/* Proportional figures (the font's default), never tabular-nums — a large
+   standalone value looks loose with equal-width digits at display sizes. */
+.kpi-tile__value { font-size: var(--text-2xl); font-weight: 600; }
+
+.kpi-tile__delta { margin: 0; font-size: var(--text-sm); color: var(--color-text-muted); }
+
+/* Each chart's wrapper: a <figure> holding the aria-hidden SVG, a real-DOM
+   legend (identity must never rely on an aria-hidden subtree), and a
+   <details><table> twin carrying the same data as text. */
+.chart-figure {
+  margin: var(--space-6) 0 0;
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.chart-figure figcaption { margin-block-end: var(--space-3); font-weight: 600; }
+
+.chart-figure__caption-note { margin: var(--space-1) 0 0; font-weight: 400; font-size: var(--text-sm); color: var(--color-text-muted); }
+
+.chart-figure svg { inline-size: 100%; block-size: auto; }
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.chart-legend li { display: inline-flex; align-items: center; gap: var(--space-2); }
+
+.chart-legend__swatch {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.chart-legend__swatch--1 { background: var(--chart-1); }
+.chart-legend__swatch--2 { background: var(--chart-2); }
+.chart-legend__swatch--3 { background: var(--chart-3); }
+
+.chart-table-details { margin-block-start: var(--space-4); }
+
+.chart-table-details summary {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.75rem;
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+/* Shared table styling: the sortable "top pages" table and every chart's
+   accessible <details> twin. */
+.data-table { inline-size: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+
+.data-table th,
+.data-table td {
+  padding: var(--space-2) var(--space-3);
+  border-block-end: 1px solid var(--color-border);
+  text-align: start;
+}
+
+.data-table th { color: var(--color-text-muted); font-weight: 600; }
+
+/* Table cells that hold a number align on a shared edge — this is the one
+   place tabular-nums belongs, per the skill's figures rule. */
+.data-table td[data-type='number'] { font-variant-numeric: tabular-nums; text-align: end; }
+.data-table th[data-type='number'] { text-align: end; }
+
+.sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  padding-inline: var(--space-2);
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sort-btn:hover { color: var(--color-accent); }
+
+.sort-btn__indicator { font-size: 0.7em; color: var(--color-text-muted); }

@@ -44,6 +44,26 @@
   --color-border-strong: light-dark(#767e8c, #666e7c); /* control boundaries — gated at 3:1 */
   --color-focus:         light-dark(#1c5fd6, #7aa7ff);
 
+  /* Chart categorical palette (dataviz skill, dashboard demo). Five slots taken
+     from the skill's documented 8-hue default order (blue, orange, aqua, yellow,
+     magenta, green, violet, red), keeping their RELATIVE order — never cycled or
+     eyeballed. Slots 2/3/4 (orange, aqua, yellow) are skipped: their documented
+     *light*-band step falls under 3:1 against this project's actual
+     --color-surface (2.99 / 2.63 / 2.02:1 measured), and reusing their
+     already-validated *dark*-band step for both themes collapses adjacent-pair
+     CVD separation once yellow (which normally sits between aqua and magenta)
+     is removed (ΔE 1.6 deutan — see task-13-14-report.md). Slots 1/5/6/7/8
+     (blue, magenta, green, violet, red) pass every check — lightness band,
+     chroma floor, adjacent AND all-pairs CVD (worst ΔE 13.0, both modes),
+     normal-vision floor, and 3:1 contrast against --color-surface — using their
+     hex values completely unmodified from the skill's palette.md, renumbered
+     --chart-1..--chart-5. Re-validated in tools/contrast.test.mjs. */
+  --chart-1: light-dark(#2a78d6, #3987e5); /* blue */
+  --chart-2: light-dark(#d55181, #d55181); /* magenta (dark-band step, both modes) */
+  --chart-3: light-dark(#008300, #008300); /* green */
+  --chart-4: light-dark(#4a3aa7, #9085e9); /* violet */
+  --chart-5: light-dark(#e34948, #e66767); /* red */
+
   --font-latin: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-arabic: 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
 

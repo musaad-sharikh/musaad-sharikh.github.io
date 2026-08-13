@@ -25,6 +25,16 @@ const PAIRS = [
   ['--color-border-strong', '--color-surface', 3.0, 'control boundary on card surface'],
   ['--color-focus', '--color-bg', 3.0, 'focus ring on page background'],
   ['--color-focus', '--color-surface', 3.0, 'focus ring on card surface'],
+
+  // Dashboard chart categorical palette (Task 13) — the dataviz skill's own
+  // validator gates these at 3:1 against a generic chart surface; this project
+  // additionally requires 3:1 against the actual --color-surface token used
+  // under the charts, per mark (not the whole 8-hue set — see tokens.css).
+  ['--chart-1', '--color-surface', 3.0, 'chart colour 1 (blue) on card surface'],
+  ['--chart-2', '--color-surface', 3.0, 'chart colour 2 (magenta) on card surface'],
+  ['--chart-3', '--color-surface', 3.0, 'chart colour 3 (green) on card surface'],
+  ['--chart-4', '--color-surface', 3.0, 'chart colour 4 (violet) on card surface'],
+  ['--chart-5', '--color-surface', 3.0, 'chart colour 5 (red) on card surface'],
 ];
 
 const css = await readFile(join(ROOT, 'css/tokens.css'), 'utf8');

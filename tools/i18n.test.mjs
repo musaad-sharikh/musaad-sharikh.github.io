@@ -44,11 +44,13 @@ const isRichVariant = (k) => k.endsWith('#html');
 
 // Read directly by mountThemeToggle (js/theme.js) rather than via a data-i18n-attr
 // in the markup, so the parity check below would otherwise flag them as orphaned.
-// 'copy.done'/'copy.failed' (demos/components) and 'checkout.errorSummary' and the
-// three 'cart.line.*Label' keys (demos/commerce) are read the same way, by each
-// page's own demo.js, for text built at runtime rather than applied by the shared
-// i18n engine (the per-line cart controls fold the product name into their label,
-// which the engine's fixed key-per-element model can't express).
+// 'copy.done'/'copy.failed' (demos/components), 'checkout.errorSummary' and the
+// three 'cart.line.*Label' keys (demos/commerce), and 'sort.ascending'/
+// 'sort.descending'/'sort.announcement' (demos/dashboard) are read the same way,
+// by each page's own demo.js, for text built at runtime rather than applied by
+// the shared i18n engine (e.g. the sortable table's live-region announcement
+// folds the already-translated column label into the sentence, which the
+// engine's fixed key-per-element model can't express).
 // This allow-list is the only permitted exemption — anything else missing from the
 // markup is a genuine orphan and must be fixed rather than exempted.
 const DYNAMIC_KEYS = new Set([
@@ -60,6 +62,9 @@ const DYNAMIC_KEYS = new Set([
   'cart.line.increaseLabel',
   'cart.line.removeLabel',
   'checkout.errorSummary',
+  'sort.ascending',
+  'sort.descending',
+  'sort.announcement',
 ]);
 
 for (const [htmlPath, dictPath] of PAGES) {

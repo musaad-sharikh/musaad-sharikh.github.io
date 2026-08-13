@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — Musaad Muhammad</title>
+  <meta name="description" content="A bilingual analytics dashboard built from hand-authored SVG — every chart is paired with the same data as an accessible, sortable table. Personal concept project, not client work.">
+  <link rel="stylesheet" href="../../css/tokens.css">
+  <link rel="stylesheet" href="../../css/base.css">
+  <link rel="stylesheet" href="../../css/components.css">
+  <link rel="stylesheet" href="../../css/print.css" media="print">
+  <script>
+    try {
+      const t = localStorage.getItem('portfolio:theme');
+      if (t) document.documentElement.dataset.theme = t;
+      const q = new URLSearchParams(location.search).get('lang');
+      const l = q === 'ar' || q === 'en' ? q : localStorage.getItem('portfolio:lang');
+      if (l === 'ar') { document.documentElement.lang = 'ar'; document.documentElement.dir = 'rtl'; }
+    } catch {}
+  </script>
+  <script type="module" src="demo.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip.label">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Primary">
+      <a class="action" href="../../index.html" data-i18n="back.toPortfolio">Back to portfolio</a>
+      <div class="nav__toggles">
+        <button type="button" id="lang-toggle" class="toggle" aria-pressed="false" aria-label="Switch to Arabic">ع</button>
+        <button type="button" id="theme-toggle" class="toggle" aria-pressed="false" aria-label="Switch to dark theme">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="container demo-intro">
+      <h1 data-i18n="page.title">Dashboard</h1>
+      <p class="badge" data-i18n="badge.label">Personal concept project — not client work</p>
+      <p class="demo-intro__text" data-i18n="page.intro">An analytics view built from hand-authored SVG, where every chart is paired with the same data as a keyboard-navigable table.</p>
+      <p class="dashboard-note" data-i18n="dashboard.syntheticNote">All figures on this page are synthetic sample data — no real clients, users, or traffic are represented.</p>
+    </div>
+
+    <section id="kpis" class="section" aria-labelledby="kpis-title">
+      <div class="container">
+        <h2 class="section__title" id="kpis-title" data-i18n="kpis.title">Key metrics</h2>
+        <div class="kpi-row">
+          <div class="kpi-tile">
+            <p class="kpi-tile__label" data-i18n="kpi.visitors.label">Total visitors</p>
+            <!-- Value is a plain number: same in both languages (this project keeps
+                 Western numerals in Arabic too), so it carries no data-i18n key. -->
+            <p class="kpi-tile__value">48,200</p>
+            <p class="kpi-tile__delta" data-i18n="kpi.visitors.delta">+12% vs previous 30 days</p>
+          </div>
+          <div class="kpi-tile">
+            <p class="kpi-tile__label" data-i18n="kpi.conversion.label">Conversion rate</p>
+            <p class="kpi-tile__value">3.4%</p>
+            <p class="kpi-tile__delta" data-i18n="kpi.conversion.delta">+0.3 pts vs previous 30 days</p>
+          </div>
+          <div class="kpi-tile">
+            <p class="kpi-tile__label" data-i18n="kpi.session.label">Avg. session duration</p>
+            <p class="kpi-tile__value">2:46</p>
+            <p class="kpi-tile__delta" data-i18n="kpi.session.delta">−0:09 vs previous 30 days</p>
+          </div>
+          <div class="kpi-tile">
+            <p class="kpi-tile__label" data-i18n="kpi.bounce.label">Bounce rate</p>
+            <p class="kpi-tile__value">41%</p>
+            <p class="kpi-tile__delta" data-i18n="kpi.bounce.delta">−3 pts vs previous 30 days</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="trend" class="section" aria-labelledby="trend-title">
+      <div class="container">
+        <h2 class="section__title" id="trend-title" data-i18n="trend.title">Visitor trend</h2>
+        <figure class="chart-figure">
+          <figcaption data-i18n="trend.figcaption">Monthly visitors by channel, last 6 months (thousands)</figcaption>
+          <div id="chart-trend" class="chart-figure__canvas"></div>
+          <ul class="chart-legend">
+            <li><span class="chart-legend__swatch chart-legend__swatch--1" aria-hidden="true"></span><span data-i18n="trend.legend.organic">Organic</span></li>
+            <li><span class="chart-legend__swatch chart-legend__swatch--2" aria-hidden="true"></span><span data-i18n="trend.legend.paid">Paid</span></li>
+          </ul>
+          <details class="chart-table-details">
+            <summary data-i18n="trend.table.summary">Show data as a table</summary>
+            <table class="data-table">
+              <caption class="visually-hidden" data-i18n="trend.table.caption">Monthly visitors by channel — table view</caption>
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="trend.table.month">Month</th>
+                  <th scope="col" data-type="number" data-i18n="trend.legend.organic">Organic</th>
+                  <th scope="col" data-type="number" data-i18n="trend.legend.paid">Paid</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td data-i18n="chart.month.jan">Jan</td><td data-type="number">12</td><td data-type="number">6</td></tr>
+                <tr><td data-i18n="chart.month.feb">Feb</td><td data-type="number">15</td><td data-type="number">7</td></tr>
+                <tr><td data-i18n="chart.month.mar">Mar</td><td data-type="number">14</td><td data-type="number">9</td></tr>
+                <tr><td data-i18n="chart.month.apr">Apr</td><td data-type="number">18</td><td data-type="number">8</td></tr>
+                <tr><td data-i18n="chart.month.may">May</td><td data-type="number">22</td><td data-type="number">11</td></tr>
+                <tr><td data-i18n="chart.month.jun">Jun</td><td data-type="number">25</td><td data-type="number">13</td></tr>
+              </tbody>
+            </table>
+          </details>
+        </figure>
+      </div>
+    </section>
+
+    <section id="channels" class="section" aria-labelledby="channels-title">
+      <div class="container">
+        <h2 class="section__title" id="channels-title" data-i18n="channels.title">Visitors by channel</h2>
+        <figure class="chart-figure">
+          <figcaption data-i18n="channels.figcaption">Visitors by channel, last 30 days (thousands)</figcaption>
+          <div id="chart-channels" class="chart-figure__canvas"></div>
+          <details class="chart-table-details">
+            <summary data-i18n="channels.table.summary">Show data as a table</summary>
+            <table class="data-table">
+              <caption class="visually-hidden" data-i18n="channels.table.caption">Visitors by channel — table view</caption>
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="channels.table.channel">Channel</th>
+                  <th scope="col" data-type="number" data-i18n="channels.table.visitors">Visitors</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td data-i18n="chart.channel.direct">Direct</td><td data-type="number">9</td></tr>
+                <tr><td data-i18n="chart.channel.organicSearch">Organic Search</td><td data-type="number">14</td></tr>
+                <tr><td data-i18n="chart.channel.social">Social</td><td data-type="number">6</td></tr>
+                <tr><td data-i18n="chart.channel.referral">Referral</td><td data-type="number">4</td></tr>
+                <tr><td data-i18n="chart.channel.email">Email</td><td data-type="number">3</td></tr>
+              </tbody>
+            </table>
+          </details>
+        </figure>
+      </div>
+    </section>
+
+    <section id="devices" class="section" aria-labelledby="devices-title">
+      <div class="container">
+        <h2 class="section__title" id="devices-title" data-i18n="devices.title">Sessions by device</h2>
+        <figure class="chart-figure">
+          <figcaption data-i18n="devices.figcaption">Share of sessions by device type, last 30 days</figcaption>
+          <div id="chart-devices" class="chart-figure__canvas"></div>
+          <ul class="chart-legend">
+            <li><span class="chart-legend__swatch chart-legend__swatch--1" aria-hidden="true"></span><span data-i18n="devices.legend.desktop">Desktop</span></li>
+            <li><span class="chart-legend__swatch chart-legend__swatch--2" aria-hidden="true"></span><span data-i18n="devices.legend.mobile">Mobile</span></li>
+            <li><span class="chart-legend__swatch chart-legend__swatch--3" aria-hidden="true"></span><span data-i18n="devices.legend.tablet">Tablet</span></li>
+          </ul>
+          <details class="chart-table-details">
+            <summary data-i18n="devices.table.summary">Show data as a table</summary>
+            <table class="data-table">
+              <caption class="visually-hidden" data-i18n="devices.table.caption">Share of sessions by device — table view</caption>
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="devices.table.device">Device</th>
+                  <th scope="col" data-type="number" data-i18n="devices.table.share">Share</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td data-i18n="devices.legend.desktop">Desktop</td><td data-type="number">58%</td></tr>
+                <tr><td data-i18n="devices.legend.mobile">Mobile</td><td data-type="number">35%</td></tr>
+                <tr><td data-i18n="devices.legend.tablet">Tablet</td><td data-type="number">7%</td></tr>
+              </tbody>
+            </table>
+          </details>
+        </figure>
+      </div>
+    </section>
+
+    <section id="pages" class="section" aria-labelledby="pages-title">
+      <div class="container">
+        <h2 class="section__title" id="pages-title" data-i18n="pages.title">Top pages</h2>
+        <p data-i18n="pages.intro">Select a column heading to sort the table by that column.</p>
+        <table class="data-table" id="pages-table">
+          <caption class="visually-hidden" data-i18n="pages.table.caption">Top pages by visitors, sortable</caption>
+          <thead>
+            <tr>
+              <th scope="col" aria-sort="none">
+                <button type="button" class="sort-btn" data-sort-key="page" data-sort-type="text">
+                  <span data-i18n="pages.table.page">Page</span>
+                  <span class="sort-btn__indicator" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th scope="col" data-type="number" aria-sort="descending">
+                <button type="button" class="sort-btn" data-sort-key="visitors" data-sort-type="number">
+                  <span data-i18n="pages.table.visitors">Visitors</span>
+                  <span class="sort-btn__indicator" aria-hidden="true">▼</span>
+                </button>
+              </th>
+              <th scope="col" data-type="number" aria-sort="none">
+                <button type="button" class="sort-btn" data-sort-key="avgTime" data-sort-type="number">
+                  <span data-i18n="pages.table.avgTime">Avg. time on page</span>
+                  <span class="sort-btn__indicator" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th scope="col" data-type="number" aria-sort="none">
+                <button type="button" class="sort-btn" data-sort-key="bounce" data-sort-type="number">
+                  <span data-i18n="pages.table.bounce">Bounce rate</span>
+                  <span class="sort-btn__indicator" aria-hidden="true"></span>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-i18n="table.page.home" data-value="Home">Home</td>
+              <td data-type="number" data-value="9840">9,840</td>
+              <td data-type="number" data-value="118">1:58</td>
+              <td data-type="number" data-value="38">38%</td>
+            </tr>
+            <tr>
+              <td data-i18n="table.page.productOverview" data-value="Product overview">Product overview</td>
+              <td data-type="number" data-value="6120">6,120</td>
+              <td data-type="number" data-value="161">2:41</td>
+              <td data-type="number" data-value="44">44%</td>
+            </tr>
+            <tr>
+              <td data-i18n="table.page.pricing" data-value="Pricing">Pricing</td>
+              <td data-type="number" data-value="4310">4,310</td>
+              <td data-type="number" data-value="82">1:22</td>
+              <td data-type="number" data-value="52">52%</td>
+            </tr>
+            <tr>
+              <td data-i18n="table.page.blog" data-value="Blog: Design systems">Blog: Design systems</td>
+              <td data-type="number" data-value="3870">3,870</td>
+              <td data-type="number" data-value="195">3:15</td>
+              <td data-type="number" data-value="29">29%</td>
+            </tr>
+            <tr>
+              <td data-i18n="table.page.caseStudy" data-value="Case study: concept dashboard">Case study: concept dashboard</td>
+              <td data-type="number" data-value="2260">2,260</td>
+              <td data-type="number" data-value="124">2:04</td>
+              <td data-type="number" data-value="47">47%</td>
+            </tr>
+            <tr>
+              <td data-i18n="table.page.contact" data-value="Contact">Contact</td>
+              <td data-type="number" data-value="1540">1,540</td>
+              <td data-type="number" data-value="48">0:48</td>
+              <td data-type="number" data-value="61">61%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div class="visually-hidden" role="status" aria-live="polite" id="i18n-status"></div>
+</body>
+</html>
