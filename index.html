@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Musaad Muhammad — Design Engineer, Front-End & UI</title>
+  <meta name="description" content="Portfolio of Musaad Muhammad, a design engineer working across front-end development and UI design — component libraries, prototypes, and hand-built accessible interfaces in English and Arabic.">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script>
+    try {
+      const t = localStorage.getItem('portfolio:theme');
+      if (t) document.documentElement.dataset.theme = t;
+      const q = new URLSearchParams(location.search).get('lang');
+      const l = q === 'ar' || q === 'en' ? q : localStorage.getItem('portfolio:lang');
+      if (l === 'ar') { document.documentElement.lang = 'ar'; document.documentElement.dir = 'rtl'; }
+    } catch {}
+  </script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip.label">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Primary">
+      <ul class="nav__list">
+        <li><a href="#about" data-i18n="nav.about">About</a></li>
+        <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
+        <li><a href="#work" data-i18n="nav.work">Work</a></li>
+        <li><a href="#skills" data-i18n="nav.skills">Skills</a></li>
+        <li><a href="#certifications" data-i18n="nav.certs">Certifications</a></li>
+        <li><a href="#languages" data-i18n="nav.langs">Languages</a></li>
+      </ul>
+      <div class="nav__toggles">
+        <button type="button" id="lang-toggle" class="toggle" aria-pressed="false" aria-label="Switch to Arabic">ع</button>
+        <button type="button" id="theme-toggle" class="toggle" aria-pressed="false" aria-label="Switch to dark theme">🌙</button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+
+    <section id="about" class="hero" aria-labelledby="about-title">
+      <div class="container">
+        <h2 class="visually-hidden" id="about-title" data-i18n="about.title">About</h2>
+        <h1 data-i18n="hero.name">Musaad Muhammad</h1>
+        <p class="hero__tagline" data-i18n="hero.title">Design Engineer · Front-End & UI</p>
+        <p class="hero__summary" data-i18n="hero.summary">I'm a UI designer who learned to build what I design. After seven years designing web interfaces, I now write the front-end too — HTML, CSS, and JavaScript — so I can take a screen from a Figma file all the way to a working page. I'm most useful where design and front-end meet: component libraries, prototypes, and clean hand-offs.</p>
+        <ul class="actions">
+          <li><a class="action" href="mailto:musaad.sharikh@gmail.com" data-i18n="actions.email">Email</a></li>
+          <li><a class="action" href="https://linkedin.com/in/musaad-muhammad" rel="noopener" data-i18n="actions.linkedin">LinkedIn</a></li>
+          <li><a class="action" href="https://github.com/musaad-sharikh" rel="noopener" data-i18n="actions.github">GitHub</a></li>
+          <li><a class="action action--primary" href="assets/cv/Musaad-Muhammad-CV-EN.pdf" data-i18n="actions.cv" data-i18n-attr="href:cv.href">Download CV</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="experience" class="section" aria-labelledby="experience-title">
+      <div class="container">
+        <h2 class="section__title" id="experience-title" data-i18n="exp.title">Work Experience</h2>
+        <ol class="timeline stack">
+          <li class="timeline__item">
+            <div class="timeline__role">
+              <span class="timeline__position" data-i18n="exp.adawliah.role">UX/UI Designer — aDawliah</span>
+              <span class="timeline__date" data-i18n="exp.adawliah.date">2019 – 2024</span>
+            </div>
+            <ul class="timeline__bullets stack">
+              <li data-i18n="exp.adawliah.b1">Designed 70+ screens and wireframes in Figma for e-commerce and dashboard products, and wrote the specs engineers built from.</li>
+              <li data-i18n="exp.adawliah.b2">Built the team's first shared component library in Figma, which cut design-to-dev revision cycles by about 30%.</li>
+              <li data-i18n="exp.adawliah.b3">Worked directly with front-end engineers to turn wireframes into working prototypes.</li>
+            </ul>
+          </li>
+          <li class="timeline__item">
+            <div class="timeline__role">
+              <span class="timeline__position" data-i18n="exp.freelance.role">Freelance UI Designer & Front-End</span>
+              <span class="timeline__date" data-i18n="exp.freelance.date">2017 – 2019</span>
+            </div>
+            <ul class="timeline__bullets stack">
+              <li data-i18n="exp.freelance.b1">Took 5+ small-business and startup projects from first brief to a live site, handling both the design and the build.</li>
+              <li data-i18n="exp.freelance.b2">Hand-coded responsive layouts in HTML and CSS, and shipped each one inside a two-week window.</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="work" class="section" aria-labelledby="work-title">
+      <div class="container">
+        <h2 class="section__title" id="work-title" data-i18n="work.title">Work</h2>
+        <div class="cards">
+          <article class="card">
+            <h3 data-i18n="work.componentLibrary.title">Component Library</h3>
+            <p data-i18n="work.componentLibrary.desc">A live design system: buttons, form fields, tabs, dialogs and toasts, each shown in light and dark and in both reading directions.</p>
+            <p class="badge" data-i18n="work.badge">Personal concept project — not client work</p>
+            <div class="card__links">
+              <a href="demos/components/" data-i18n="work.demoLabel">Live demo</a>
+              <a href="https://github.com/musaad-sharikh/musaad-sharikh.github.io/tree/main/demos/components" rel="noopener" data-i18n="work.sourceLabel">Source</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3 data-i18n="work.commerceFlow.title">Commerce Flow</h3>
+            <p data-i18n="work.commerceFlow.desc">A working shopping slice — product grid, cart drawer, and a checkout form with accessible, translated validation.</p>
+            <p class="badge" data-i18n="work.badge">Personal concept project — not client work</p>
+            <div class="card__links">
+              <a href="demos/commerce/" data-i18n="work.demoLabel">Live demo</a>
+              <a href="https://github.com/musaad-sharikh/musaad-sharikh.github.io/tree/main/demos/commerce" rel="noopener" data-i18n="work.sourceLabel">Source</a>
+            </div>
+          </article>
+          <article class="card">
+            <h3 data-i18n="work.dashboard.title">Dashboard</h3>
+            <p data-i18n="work.dashboard.desc">An analytics view built from hand-authored SVG, where every chart is paired with the same data as a keyboard-navigable table.</p>
+            <p class="badge" data-i18n="work.badge">Personal concept project — not client work</p>
+            <div class="card__links">
+              <a href="demos/dashboard/" data-i18n="work.demoLabel">Live demo</a>
+              <a href="https://github.com/musaad-sharikh/musaad-sharikh.github.io/tree/main/demos/dashboard" rel="noopener" data-i18n="work.sourceLabel">Source</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="section" aria-labelledby="skills-title">
+      <div class="container">
+        <h2 class="section__title" id="skills-title" data-i18n="skills.title">Skills</h2>
+        <div class="skills-groups stack">
+          <div class="skills-group">
+            <h3 data-i18n="skills.frontend.label">Front-End</h3>
+            <p class="tag-list" data-i18n="skills.frontend.list">HTML5, CSS3, JavaScript (ES6+), Responsive Web Design, Git &amp; GitHub</p>
+          </div>
+          <div class="skills-group">
+            <h3 data-i18n="skills.design.label">Design &amp; Systems</h3>
+            <p class="tag-list" data-i18n="skills.design.list">Figma, Auto Layout, Design Systems, Wireframing, Prototyping, User Research, Accessibility (WCAG)</p>
+          </div>
+          <div class="skills-group">
+            <h3 data-i18n="skills.tools.label">Tools</h3>
+            <p class="tag-list" data-i18n="skills.tools.list">VS Code, Chrome DevTools</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="certifications" class="section" aria-labelledby="certifications-title">
+      <div class="container">
+        <h2 class="section__title" id="certifications-title" data-i18n="certs.title">Certifications</h2>
+        <ul class="stack">
+          <li data-i18n="certs.meta">Programming with JavaScript — Meta (Coursera, 2025)</li>
+          <li data-i18n="certs.tuwaiq">JavaScript 101 — Tuwaiq Academy, Sater Platform (2025)</li>
+          <li data-i18n="certs.fcc">Responsive Web Design — freeCodeCamp (2024)</li>
+          <li data-i18n="certs.ixdf">UX Design — Interaction Design Foundation (2024)</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="languages" class="section" aria-labelledby="languages-title">
+      <div class="container">
+        <h2 class="section__title" id="languages-title" data-i18n="langs.title">Languages</h2>
+        <p data-i18n="langs.body">Arabic (native) · English (professional working proficiency — STEP 66, Qiyas 2022)</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer__name" data-i18n="hero.name">Musaad Muhammad</p>
+      <ul class="actions">
+        <li><a href="mailto:musaad.sharikh@gmail.com" data-i18n="actions.email">Email</a></li>
+        <li><a href="https://linkedin.com/in/musaad-muhammad" rel="noopener" data-i18n="actions.linkedin">LinkedIn</a></li>
+        <li><a href="https://github.com/musaad-sharikh" rel="noopener" data-i18n="actions.github">GitHub</a></li>
+        <li><a href="https://github.com/musaad-sharikh/musaad-sharikh.github.io" rel="noopener" data-i18n="footer.source">View source on GitHub</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <div class="visually-hidden" role="status" aria-live="polite" id="i18n-status"></div>
+</body>
+</html>

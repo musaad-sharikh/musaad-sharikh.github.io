@@ -1,0 +1,223 @@
+/* Site header and primary navigation. */
+.site-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 5;
+  background: var(--color-bg);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+}
+
+.nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav__list a {
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: var(--text-sm);
+}
+
+.nav__list a:hover,
+.nav__list a.is-current {
+  color: var(--color-accent);
+}
+
+.nav__toggles {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Both toggle buttons: 44x44 CSS px is the accessible minimum touch target,
+   not one of the token scale's stops, so it is stated explicitly here. */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  padding: var(--space-2);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.toggle:hover { border-color: var(--color-accent); }
+
+/* Hero / About section. */
+.hero {
+  padding-block: var(--space-8);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.hero h1 {
+  font-size: var(--text-3xl);
+  margin-block: 0 var(--space-2);
+}
+
+.hero__tagline {
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+  margin-block: 0 var(--space-5);
+}
+
+.hero__summary {
+  font-size: var(--text-base);
+  margin-block: 0;
+}
+
+/* Shared action-link row, used in the hero and repeated in the footer. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  list-style: none;
+  margin: var(--space-5) 0 0;
+  padding: 0;
+}
+
+.footer .actions { margin-block-start: var(--space-3); }
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.75rem;
+  padding-inline: var(--space-4);
+  color: var(--color-text);
+  text-decoration: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+.action:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+.action--primary {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
+}
+
+.action--primary:hover { color: var(--color-on-accent); opacity: 0.9; }
+
+/* Experience timeline. */
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.timeline__item + .timeline__item { margin-block-start: var(--space-6); }
+
+.timeline__role {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-block-end: var(--space-3);
+}
+
+.timeline__position {
+  font-weight: 600;
+  font-size: var(--text-lg);
+}
+
+.timeline__date {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.timeline__bullets {
+  margin: 0;
+  padding-inline-start: var(--space-5);
+}
+
+/* Work cards. */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-5);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+}
+
+.card h3 { margin: 0; font-size: var(--text-lg); }
+
+.card p { margin: 0; }
+
+.badge {
+  align-self: flex-start;
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.card__links {
+  display: flex;
+  gap: var(--space-4);
+  margin-block-start: auto;
+  padding-block-start: var(--space-2);
+}
+
+.card__links a { color: var(--color-accent); font-size: var(--text-sm); }
+
+/* Skills. */
+.skills-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-5);
+}
+
+.skills-group h3 {
+  font-size: var(--text-base);
+  margin-block: 0 var(--space-2);
+}
+
+.tag-list {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+/* Footer. */
+.footer {
+  padding-block: var(--space-7);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.footer__name {
+  font-weight: 600;
+  margin: 0;
+}
