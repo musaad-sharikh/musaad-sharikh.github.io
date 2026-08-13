@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Musaad Muhammad">
+  <!-- Colours are the accent and on-accent pair from css/tokens.css (the
+       color-accent and color-on-accent custom properties), transcribed as
+       literal hex because this file is loaded as a standalone image resource
+       and cannot read the page's CSS custom properties. prefers-color-scheme
+       (the OS/browser signal, independent of this site's own theme toggle)
+       swaps to the dark pair so the tab icon still reads correctly against a
+       dark browser chrome. -->
+  <style>
+    .bg { fill: #1c5fd6; }
+    .fg { fill: #ffffff; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #7aa7ff; }
+      .fg { fill: #0d1017; }
+    }
+  </style>
+  <rect class="bg" width="32" height="32" rx="8"/>
+  <text class="fg" x="16" y="23" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="19" font-weight="700">M</text>
+</svg>
