@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://musaad-sharikh.github.io/sitemap.xml
