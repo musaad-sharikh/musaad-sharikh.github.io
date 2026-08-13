@@ -1,0 +1,33 @@
+/* Chrome that only makes sense on screen. */
+.nav,
+.toggle,
+.skip-link,
+.footer .actions {
+  display: none;
+}
+
+:root {
+  /* Resolve every light-dark() token to its light branch on paper, regardless
+     of the on-screen theme, then pin text and background to pure black/white. */
+  color-scheme: light;
+  --color-bg: #fff;
+  --color-text: #000;
+}
+
+/* No shadows or fills survive printing — just ink on paper. */
+.card,
+.action,
+.badge {
+  background: none;
+  box-shadow: none;
+}
+
+/* Links carry no color on paper, so the destination is spelled out instead. */
+a[href^="http"]::after {
+  content: " (" attr(href) ")";
+}
+
+.card,
+.timeline__item {
+  break-inside: avoid;
+}
