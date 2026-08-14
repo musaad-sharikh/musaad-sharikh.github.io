@@ -55,7 +55,7 @@
 
   <header class="site-header">
     <nav class="nav container" aria-label="Primary">
-      <ul class="nav__list">
+      <ul class="nav__list" role="list">
         <li><a href="#about" data-i18n="nav.about">About</a></li>
         <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
         <li><a href="#work" data-i18n="nav.work">Work</a></li>
@@ -83,11 +83,14 @@
     <section id="about" class="hero" aria-labelledby="about-title">
       <div class="container">
         <div class="hero__copy">
-          <h2 class="visually-hidden" id="about-title" data-i18n="about.title">About</h2>
           <h1 data-i18n="hero.name">Musaad Muhammad</h1>
+          <!-- After the h1, not before it: heading navigation would otherwise
+               meet a level 2 before the page's only level 1. It stays in the
+               markup because the section is labelled by it. -->
+          <h2 class="visually-hidden" id="about-title" data-i18n="about.title">About</h2>
           <p class="hero__tagline" data-i18n="hero.title">Design Engineer · Front-End & UI</p>
           <p class="hero__summary" data-i18n="hero.summary">I'm a UI designer who learned to build what I design. After seven years designing web interfaces, I now write the front-end too — HTML, CSS, and JavaScript — so I can take a screen from a Figma file all the way to a working page. I'm most useful where design and front-end meet: component libraries, prototypes, and clean hand-offs.</p>
-          <ul class="actions">
+          <ul class="actions" role="list">
             <li><a class="action" href="mailto:musaad.sharikh@gmail.com" data-i18n="actions.email">Email</a></li>
             <li><a class="action" href="https://linkedin.com/in/musaad-muhammad" rel="noopener" data-i18n="actions.linkedin">LinkedIn</a></li>
             <li><a class="action" href="https://github.com/musaad-sharikh" rel="noopener" data-i18n="actions.github">GitHub</a></li>
@@ -126,7 +129,7 @@
     <section id="experience" class="section" aria-labelledby="experience-title">
       <div class="container section__grid">
         <h2 class="section__title" id="experience-title" data-i18n="exp.title">Work Experience</h2>
-        <ol class="timeline">
+        <ol class="timeline" role="list">
           <li class="timeline__item">
             <span class="timeline__date" data-i18n="exp.adawliah.date">2019 – 2024</span>
             <div class="timeline__body">
@@ -266,7 +269,7 @@
   <footer class="footer">
     <div class="container">
       <p class="footer__name" data-i18n="hero.name">Musaad Muhammad</p>
-      <ul class="actions">
+      <ul class="actions" role="list">
         <li><a href="mailto:musaad.sharikh@gmail.com" data-i18n="actions.email">Email</a></li>
         <li><a href="https://linkedin.com/in/musaad-muhammad" rel="noopener" data-i18n="actions.linkedin">LinkedIn</a></li>
         <li><a href="https://github.com/musaad-sharikh" rel="noopener" data-i18n="actions.github">GitHub</a></li>

@@ -25,15 +25,33 @@ mountThemeToggle({
 const links = new Map(
   [...document.querySelectorAll('.nav__list a[href^="#"]')].map((a) => [a.hash.slice(1), a]),
 );
+// Crossing a boundary puts two sections inside the observer's band at once, and
+// marking both is wrong twice over: aria-current names THE current item, not a
+// set, and two highlighted nav links read as two places at once. The set of
+// intersecting sections is tracked instead, and whichever comes first in
+// document order wins — so exactly one link carries the state at any moment.
+const visible = new Set();
+
+function markCurrent() {
+  let winner = null;
+  for (const id of links.keys()) {
+    if (visible.has(id)) { winner = id; break; }
+  }
+  for (const [id, link] of links) {
+    const isCurrent = id === winner;
+    link.classList.toggle('is-current', isCurrent);
+    if (isCurrent) link.setAttribute('aria-current', 'true');
+    else link.removeAttribute('aria-current');
+  }
+}
+
 const spy = new IntersectionObserver(
   (entries) => {
     for (const entry of entries) {
-      const link = links.get(entry.target.id);
-      if (!link) continue;
-      link.classList.toggle('is-current', entry.isIntersecting);
-      if (entry.isIntersecting) link.setAttribute('aria-current', 'true');
-      else link.removeAttribute('aria-current');
+      if (entry.isIntersecting) visible.add(entry.target.id);
+      else visible.delete(entry.target.id);
     }
+    markCurrent();
   },
   { rootMargin: '-45% 0px -45% 0px' },
 );

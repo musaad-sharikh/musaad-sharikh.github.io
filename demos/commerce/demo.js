@@ -23,15 +23,6 @@ mountThemeToggle({
   dictionary,
 });
 
-const status = document.querySelector('#i18n-status');
-
-function announce(key, english) {
-  const text = i18n.current() === 'ar' ? (dictionary[key] ?? english) : english;
-  // Clearing first forces a re-announcement when the same message repeats.
-  status.textContent = '';
-  requestAnimationFrame(() => { status.textContent = text; });
-}
-
 // Small templating helper for strings that are built at runtime (never a
 // data-i18n markup target) rather than applied by the shared i18n engine —
 // the per-line cart controls need the product name folded into their label,
@@ -101,9 +92,47 @@ const cartSubtotalEl = document.querySelector('#cart-subtotal-value');
 const cartBadgeEl = document.querySelector('#cart-badge');
 const cartCountLiveEl = document.querySelector('#cart-count-live');
 
+/** Where focus was standing inside the cart list, as something that survives the
+ *  rebuild below: a control key plus the row it was on. */
+function captureCartFocus() {
+  const active = document.activeElement;
+  if (!cartLinesEl.contains(active)) return null;
+  const line = active.closest('.cart-line');
+  return {
+    key: active.dataset.focusKey ?? null,
+    index: line ? [...cartLinesEl.children].indexOf(line) : 0,
+  };
+}
+
+/** renderCart() rebuilds every row from scratch, so the node holding focus is
+ *  destroyed on every quantity change and every removal. Left alone, focus fell
+ *  to <body> while the drawer was still open — the reader lost their place
+ *  inside a dialog that had made the rest of the page inert.
+ *
+ *  Focus goes back to the same control where it still exists; when the row is
+ *  gone, to the same control on the row that took its place; and failing that to
+ *  the drawer's close button, which is the one control that is always there. It
+ *  is never dropped. */
+function restoreCartFocus(previous) {
+  if (!previous) return;
+
+  const byKey = previous.key
+    && cartLinesEl.querySelector(`[data-focus-key="${CSS.escape(previous.key)}"]`);
+  if (byKey) { byKey.focus(); return; }
+
+  const rows = [...cartLinesEl.children];
+  const role = previous.key ? previous.key.split(':')[0] : 'remove';
+  const fallbackRow = rows[Math.min(previous.index, rows.length - 1)];
+  const sameRole = fallbackRow?.querySelector(`[data-focus-key^="${role}:"]`);
+  if (sameRole) { sameRole.focus(); return; }
+
+  document.querySelector('#cart-drawer .drawer__close')?.focus();
+}
+
 function renderCart() {
   const lines = cart.items();
   const fmt = money(i18n.current());
+  const previousFocus = captureCartFocus();
 
   cartLinesEl.textContent = '';
   for (const line of lines) {
@@ -124,6 +153,7 @@ function renderCart() {
     decrease.type = 'button';
     decrease.className = 'stepper__btn';
     decrease.textContent = '−';
+    decrease.dataset.focusKey = `dec:${line.id}`;
     decrease.setAttribute('aria-label', t('cart.line.decreaseLabel', 'Decrease quantity of {product}', { product: name }));
     decrease.addEventListener('click', () => cart.setQty(line.id, line.qty - 1));
 
@@ -135,6 +165,7 @@ function renderCart() {
     increase.type = 'button';
     increase.className = 'stepper__btn';
     increase.textContent = '+';
+    increase.dataset.focusKey = `inc:${line.id}`;
     increase.setAttribute('aria-label', t('cart.line.increaseLabel', 'Increase quantity of {product}', { product: name }));
     increase.addEventListener('click', () => cart.setQty(line.id, line.qty + 1));
 
@@ -148,6 +179,7 @@ function renderCart() {
     removeBtn.type = 'button';
     removeBtn.className = 'cart-line__remove';
     removeBtn.textContent = '×';
+    removeBtn.dataset.focusKey = `remove:${line.id}`;
     removeBtn.setAttribute('aria-label', t('cart.line.removeLabel', 'Remove {product} from cart', { product: name }));
     removeBtn.addEventListener('click', () => cart.remove(line.id));
 
@@ -163,6 +195,8 @@ function renderCart() {
   const count = cart.total();
   cartBadgeEl.textContent = String(count);
   cartCountLiveEl.textContent = String(count);
+
+  restoreCartFocus(previousFocus);
 }
 
 for (const button of document.querySelectorAll('[data-add-to-cart]')) {
@@ -244,8 +278,9 @@ form.addEventListener('submit', (event) => {
   }
 
   if (firstInvalid) {
+    // #checkout-summary is itself aria-live; announcing through #i18n-status as
+    // well made every failure arrive twice in a row.
     summaryEl.textContent = t('checkout.errorSummary', 'There are errors in the form. Please review the highlighted fields.');
-    announce('checkout.errorSummary', 'There are errors in the form. Please review the highlighted fields.');
     firstInvalid.focus();
     return;
   }
@@ -253,6 +288,6 @@ form.addEventListener('submit', (event) => {
   summaryEl.textContent = '';
   form.reset();
   for (const { input } of FIELDS) setFieldError(input, null);
+  // Likewise: #checkout-success carries role="status" aria-live="polite".
   successEl.hidden = false;
-  announce('checkout.success', successEl.textContent);
 });

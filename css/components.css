@@ -157,8 +157,8 @@
     animation: rise var(--duration-slow) var(--ease-out) backwards;
   }
 
-  /* Child 1 is the visually-hidden section heading; the name is child 2 and
-     leads the sequence. */
+  /* Children 1 and 2 are the name and the visually-hidden section heading; the
+     name leads the sequence at no delay. */
   .hero__copy > :nth-child(3) { animation-delay: 70ms; }
   .hero__copy > :nth-child(4) { animation-delay: 140ms; }
   .hero__copy > :nth-child(5) { animation-delay: 210ms; }
@@ -516,6 +516,18 @@
   margin-block-start: auto;
   padding-block-start: var(--space-3);
   border-block-start: 1px solid var(--color-border);
+}
+
+/* Text links that stand alone in a row are still controls, and the site commits
+   to a 44x44 target for those. They keep the plain-link look — no border, no
+   fill — and simply reserve the height, with min-inline-size covering the
+   shortest label ("Email" measured 43px wide, i.e. one pixel under). */
+.card__links a,
+.footer .actions a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.75rem;
+  min-inline-size: 2.75rem;
 }
 
 .card__links a { color: var(--color-accent); font-size: var(--text-sm); }
