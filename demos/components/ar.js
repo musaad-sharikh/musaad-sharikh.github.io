@@ -44,6 +44,8 @@ export default {
 
   'section.choices.title': 'مربّعات الاختيار وأزرار الاختيار',
   'section.choices.desc': 'عناصر تحكّم مجمّعة باستخدام fieldset و legend لقارئات الشاشة.',
+  'section.choices.desc#html':
+    'عناصر تحكّم مجمّعة باستخدام <span lang="en" dir="ltr">fieldset</span> و <span lang="en" dir="ltr">legend</span> لقارئات الشاشة.',
   'demo.choices.notify.legend': 'تفضيلات الإشعارات',
   'demo.choices.notify.email': 'تحديثات عبر البريد الإلكتروني',
   'demo.choices.notify.sms': 'تنبيهات عبر الرسائل النصية',
@@ -60,6 +62,9 @@ export default {
   'section.tabs.desc':
     'علامات تبويب متوافقة مع WAI-ARIA بترتيب تركيز متنقّل (roving tabindex). يتبع اتجاه مفاتيح ' +
     'الأسهم اتجاه النص الحالي للمعرض أعلاه، وليس لغة الصفحة.',
+  'section.tabs.desc#html':
+    'علامات تبويب متوافقة مع <span lang="en" dir="ltr">WAI-ARIA</span> بترتيب تركيز متنقّل (<span lang="en" dir="ltr">roving tabindex</span>). ' +
+    'يتبع اتجاه مفاتيح الأسهم اتجاه النص الحالي للمعرض أعلاه، وليس لغة الصفحة.',
   'demo.tabs.tab1': 'نظرة عامة',
   'demo.tabs.tab2': 'المواصفات',
   'demo.tabs.tab3': 'التقييمات',
@@ -69,9 +74,12 @@ export default {
 
   'section.accordion.title': 'الأكورديون',
   'section.accordion.desc': 'عناصر إفصاح أصلية — لا حاجة إلى JavaScript.',
+  'section.accordion.desc#html': 'عناصر إفصاح أصلية — لا حاجة إلى <span lang="en" dir="ltr">JavaScript</span>.',
   'demo.accordion.q1': 'ما هي مكتبة المكوّنات هذه؟',
   'demo.accordion.a1':
     'مجموعة من المكوّنات التجريبية مبنية على رموز التصميم (design tokens) نفسها المستخدمة في بقية الموقع.',
+  'demo.accordion.a1#html':
+    'مجموعة من المكوّنات التجريبية مبنية على رموز التصميم (<span lang="en" dir="ltr">design tokens</span>) نفسها المستخدمة في بقية الموقع.',
   'demo.accordion.q2': 'هل يستخدمها عملاء حقيقيون؟',
   'demo.accordion.a2': 'لا — هذا مشروع شخصي تجريبي، وليس عملاً لعميل.',
 

@@ -223,7 +223,7 @@
 
 .specimen__tag {
   font-family: var(--font-label);
-  font-size: 0.7rem;
+  font-size: calc(0.7rem * var(--script-scale));
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
