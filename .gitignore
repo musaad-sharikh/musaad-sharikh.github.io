@@ -5,7 +5,10 @@
 
 # Local tooling scratch — never part of the published site.
 .playwright/
-node_modules/
+# No trailing slash: tools/e2e/README.md has you link this in from another
+# checkout rather than install it, and git sees a symlink as a file, so
+# `node_modules/` left the link showing up as untracked.
+node_modules
 
 # Plugin scoping is a versioned decision and belongs in git. Everything else
 # under .claude/ is harness-provisioned payload that regenerates on demand.

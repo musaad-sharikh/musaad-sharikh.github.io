@@ -1,6 +1,6 @@
 # End-to-end suite
 
-110 browser checks over all four pages: language switching, dark/light mode,
+124 browser checks over all four pages: language switching, dark/light mode,
 keyboard navigation, responsive layouts, form validation, and console/network
 errors.
 
@@ -20,6 +20,10 @@ node tools/e2e/e2e.mjs "D. keyboard"                     # one group only
 ```
 
 The script serves the site itself on port 8765, so no separate server is needed.
+
+The symlink can stay. `node --test` and this suite run from the same working
+state: the runner ignores `node_modules`, and the repository scanners skip it by
+name before they look at what kind of entry it is (see `tools/lib/html.mjs`).
 
 ## Notes for whoever edits this next
 
