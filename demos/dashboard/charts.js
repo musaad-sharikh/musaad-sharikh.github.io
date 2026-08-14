@@ -16,6 +16,11 @@
 
 const NS = 'http://www.w3.org/2000/svg';
 
+// tokens.css declares --chart-1..--chart-5 and no more. Indexing past that
+// resolved to an undeclared custom property, which paints nothing: a slice would
+// simply vanish, with the legend still claiming it exists.
+const CHART_SLOTS = 5;
+
 function esc(value) {
   return String(value).replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
@@ -102,7 +107,7 @@ export function lineChart({ series = [], width, height, dir = 'ltr', xLabels = [
 
   const linesMarkup = series
     .map((s, i) => {
-      const color = `var(--chart-${i + 1})`;
+      const color = `var(--chart-${(i % CHART_SLOTS) + 1})`;
       const points = s.points ?? [];
       if (!points.length) return '';
       const coords = points.map((v, idx) => `${xAt(idx).toFixed(1)},${yAt(v).toFixed(1)}`);
@@ -216,7 +221,7 @@ export function donutChart({ data = [], size }) {
       const length = Math.max(rawLength - DONUT_GAP_PX, 0);
       const dashoffset = -cumulative;
       cumulative += rawLength;
-      return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--chart-${i + 1})" `
+      return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--chart-${(i % CHART_SLOTS) + 1})" `
         + `stroke-width="${strokeWidth}" stroke-dasharray="${length.toFixed(2)} ${(circumference - length).toFixed(2)}" `
         + `stroke-dashoffset="${dashoffset.toFixed(2)}" `
         + `transform="rotate(-90 ${cx} ${cy})"/>`;
