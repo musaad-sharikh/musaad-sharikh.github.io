@@ -7,38 +7,68 @@
   border-block-end: 1px solid var(--color-border);
 }
 
+/* The toggles never wrap onto a line of their own: the list is the only flexible
+   child, so on a phone the header is two rows (links wrapping beside the
+   toggles) rather than the three it used to be. */
 .nav {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-4);
   padding-block: var(--space-3);
 }
 
 .nav__list {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2) var(--space-5);
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  gap: var(--space-1) var(--space-5);
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
 .nav__list a {
-  color: var(--color-text);
+  display: inline-block;
+  padding-block: var(--space-1);
+  color: var(--color-text-muted);
   text-decoration: none;
   font-size: var(--text-sm);
+  transition: color var(--duration-fast) var(--ease-out);
 }
 
-.nav__list a:hover,
+.nav__list a:hover { color: var(--color-text); }
+
+/* The current section is marked by an ink rule under the link as well as by
+   colour, so the state does not rest on hue alone. */
 .nav__list a.is-current {
-  color: var(--color-accent);
+  color: var(--color-text);
+  box-shadow: inset 0 -2px 0 0 var(--color-accent);
 }
 
 .nav__toggles {
   display: flex;
+  flex: 0 0 auto;
   gap: var(--space-2);
+}
+
+/* On a phone the six anchors and the two toggles cannot share one line at the
+   desktop gap, and the header ate three rows. Tightening the gap folds it back
+   to two without hiding an anchor behind a scroller. */
+@media (max-width: 48rem) {
+  .nav { gap: var(--space-3); }
+  .nav__list { gap: 0 var(--space-3); }
+  .nav__list a { font-size: calc(0.8rem * var(--script-scale)); }
+
+  /* Only here does the list wrap and become the taller of the two children.
+     Centring the toggles against it puts them at a fractional offset, and a
+     button that starts on a half pixel composites to 43.999998px — under the
+     44px target the site commits to. Aligning to the first row of links keeps
+     the offset whole, and reads better against a two-row list anyway. */
+  .nav { align-items: flex-start; }
+  .nav__toggles { align-self: flex-start; }
 }
 
 /* Both toggle buttons: 44x44 CSS px is the accessible minimum touch target,
@@ -54,12 +84,36 @@
   color: var(--color-text);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   line-height: 1;
   cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out);
 }
 
-.toggle:hover { border-color: var(--color-accent); }
+.toggle:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+.toggle:active { background: var(--color-bg); }
+
+.toggle__icon {
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  display: block;
+}
+
+/* Which icon shows is a pure function of the resolved scheme, so the button
+   needs no JavaScript beyond the aria-label and aria-pressed that theme.js
+   already owns. With no explicit choice stored, [data-theme] is absent and the
+   OS preference decides — hence the media query for that case. */
+.toggle__icon--sun { display: none; }
+
+:root[data-theme='dark'] .toggle__icon--sun { display: block; }
+:root[data-theme='dark'] .toggle__icon--moon { display: none; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .toggle__icon--sun { display: block; }
+  :root:not([data-theme]) .toggle__icon--moon { display: none; }
+}
 
 /* Hero / About section. */
 .hero {
@@ -67,20 +121,138 @@
   border-block-end: 1px solid var(--color-border);
 }
 
+.hero .container { display: grid; gap: var(--space-7); }
+
+/* Two columns only once the specimen can hold its own width; below that it
+   stacks under the copy, where it still reads as the proof of the claim. */
+@media (min-width: 64rem) {
+  .hero .container {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+    gap: var(--space-8);
+    align-items: center;
+  }
+}
+
 .hero h1 {
   font-size: var(--text-3xl);
-  margin-block: 0 var(--space-2);
+  margin-block: 0 var(--space-3);
 }
 
 .hero__tagline {
   font-size: var(--text-lg);
   color: var(--color-text-muted);
   margin-block: 0 var(--space-5);
+  max-inline-size: none;
 }
 
 .hero__summary {
   font-size: var(--text-base);
   margin-block: 0;
+  max-inline-size: 46ch;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero__copy > *,
+  .specimen {
+    animation: rise var(--duration-slow) var(--ease-out) backwards;
+  }
+
+  /* Child 1 is the visually-hidden section heading; the name is child 2 and
+     leads the sequence. */
+  .hero__copy > :nth-child(3) { animation-delay: 70ms; }
+  .hero__copy > :nth-child(4) { animation-delay: 140ms; }
+  .hero__copy > :nth-child(5) { animation-delay: 210ms; }
+  .specimen { animation-delay: 280ms; }
+}
+
+/* ------------------------------------------------------------------------
+   Hero specimen — the signature element.
+
+   One component, built from the same tokens and the same classes the rest of
+   the site uses, rendered twice: the reader's own direction in light, and the
+   mirrored direction in dark. Both panes force their scheme with `color-scheme`
+   alone, which is what makes every light-dark() token in tokens.css resolve
+   per-pane; no colour is restated here.
+
+   It is deliberately NOT dual-script. Painting Arabic on the English page would
+   pull an Arabic font face that an English reader is documented never to
+   download — the specimen would have cost the site the guarantee it exists to
+   demonstrate. What it shows instead is the thing that is genuinely a layout
+   property: the same markup, mirrored.
+
+   The stage is aria-hidden and holds no interactive elements; the figcaption is
+   the accessible equivalent, the same arrangement the dashboard charts use with
+   their data tables.
+   ------------------------------------------------------------------------ */
+.specimen {
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.specimen__stage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.specimen__pane {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+  padding: var(--space-5) var(--space-4);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.specimen__pane--light { color-scheme: light; }
+
+.specimen__pane--dark { color-scheme: dark; }
+
+/* The seam. A single hairline between the two schemes, drawn on the inline-start
+   edge of the second pane so it lands between them in either direction. */
+.specimen__pane + .specimen__pane { border-inline-start: 1px solid var(--color-border-strong); }
+
+/* The mirrored pane runs against the page; when the page is already RTL it is
+   the LTR one. */
+.specimen__pane--flip { direction: rtl; }
+
+:root[dir='rtl'] .specimen__pane--flip { direction: ltr; }
+
+.specimen__tag {
+  font-family: var(--font-label);
+  font-size: 0.7rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* Static stand-ins for the real controls: same classes, same tokens, but no
+   focusable elements inside an aria-hidden subtree. */
+.specimen .field__control {
+  display: flex;
+  align-items: center;
+  cursor: default;
+}
+
+.specimen .btn {
+  cursor: default;
+  justify-self: start;
+}
+
+.specimen__caption {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  max-inline-size: var(--measure);
+}
+
+/* Narrow panes: the two halves stay side by side — seeing them together is the
+   whole point — but everything inside them gives up its desktop padding. */
+@media (max-width: 30rem) {
+  .specimen__pane { padding: var(--space-4) var(--space-3); gap: var(--space-3); }
+  .specimen .btn { padding-inline: var(--space-3); font-size: var(--text-sm); }
 }
 
 /* Shared action-link row, used in the hero and repeated in the footer. */
@@ -93,7 +265,7 @@
   padding: 0;
 }
 
-.footer .actions { margin-block-start: var(--space-3); }
+.footer .actions { margin-block-start: 0; }
 
 .action {
   display: inline-flex;
@@ -102,13 +274,18 @@
   padding-inline: var(--space-4);
   color: var(--color-text);
   text-decoration: none;
-  background: var(--color-surface);
+  background: none;
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
   font-size: var(--text-sm);
+  transition: border-color var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out),
+              background-color var(--duration-fast) var(--ease-out);
 }
 
 .action:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+.action:active { background: var(--color-surface); }
 
 .action--primary {
   background: var(--color-accent);
@@ -118,44 +295,58 @@
 
 .action--primary:hover { color: var(--color-on-accent); opacity: 0.9; }
 
-/* Experience timeline. */
+.action--primary:active { background: var(--color-accent); opacity: 1; }
+
+/* Experience timeline. The date moves into the metadata column, where it is
+   information the reader scans down rather than a value pushed to the far edge
+   of the role it belongs to. */
 .timeline {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.timeline__item + .timeline__item { margin-block-start: var(--space-6); }
+.timeline__item + .timeline__item {
+  margin-block-start: var(--space-6);
+  padding-block-start: var(--space-6);
+  border-block-start: 1px solid var(--color-border);
+}
 
-.timeline__role {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: var(--space-2);
-  margin-block-end: var(--space-3);
+.timeline__item { display: grid; gap: var(--space-2); }
+
+@media (min-width: 48rem) {
+  .timeline__item {
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: baseline;
+  }
 }
 
 .timeline__position {
+  display: block;
   font-weight: 600;
   font-size: var(--text-lg);
+  letter-spacing: var(--tracking-heading);
+  margin-block-end: var(--space-3);
 }
 
 .timeline__date {
-  color: var(--color-text-muted);
+  font-family: var(--font-label);
   font-size: var(--text-sm);
+  letter-spacing: var(--tracking-label);
+  color: var(--color-text-muted);
   white-space: nowrap;
 }
 
-.timeline__bullets {
-  margin: 0;
-  padding-inline-start: var(--space-5);
-}
+.timeline__bullets { margin: 0; }
 
-/* Work cards. */
+/* Work cards. Each opens with a miniature of the demo it links to, built from
+   the same tokens and mirrored by the same logical properties as the demo
+   itself — so the card is a small instance of the claim it describes rather
+   than a picture of one. */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: var(--space-5);
 }
 
@@ -167,42 +358,194 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-1);
+  transition: border-color var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
 }
 
-.card h3 { margin: 0; font-size: var(--text-lg); }
+/* focus-within carries the same treatment as hover: tabbing to a link inside
+   the card has to light the card up too, or keyboard users get no equivalent
+   of the pointer affordance. */
+.card:hover,
+.card:focus-within {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-1);
+  transform: translateY(-2px);
+}
+
+.card h3 {
+  margin: 0;
+  font-size: var(--text-lg);
+  letter-spacing: var(--tracking-heading);
+}
 
 .card p { margin: 0; }
 
-.badge {
-  align-self: flex-start;
-  padding: var(--space-1) var(--space-3);
+/* Card miniatures. Abstract, textless, and built from real boxes rather than a
+   flipped image: under RTL the parts reorder because the layout is logical, the
+   same way the demo they stand for does. */
+.mini {
+  aspect-ratio: 16 / 9;
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3);
   background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius-lg) - 4px);
+  overflow: hidden;
+}
+
+.mini__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.mini__bar {
+  block-size: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-border-strong);
+}
+
+.mini__bar--short { inline-size: 40%; }
+
+.mini__bar--mid { inline-size: 65%; }
+
+.mini__pill {
+  block-size: 1.1rem;
+  inline-size: 3.2rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+}
+
+.mini__pill--ghost {
+  background: none;
   border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
+}
+
+.mini__field {
+  block-size: 1.1rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.mini__row { display: flex; gap: var(--space-2); }
+
+.mini__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  flex: 1 1 auto;
+}
+
+.mini__tile {
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  min-block-size: 1.1rem;
+}
+
+.mini__drawer {
+  flex: 0 0 22%;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+}
+
+/* Chart miniature: four columns in one hue on a baseline. They are not sorted —
+   an ordered set of heights would imply a ranking the miniature does not have. */
+.mini__plot {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  flex: 1 1 auto;
+  border-block-end: 1px solid var(--color-border-strong);
+  padding-block-end: var(--space-1);
+}
+
+.mini__column {
+  flex: 1 1 auto;
+  background: var(--color-accent);
+  border-radius: 2px 2px 0 0;
+}
+
+.mini__column--a { block-size: 45%; }
+
+.mini__column--b { block-size: 80%; }
+
+.mini__column--c { block-size: 60%; }
+
+.mini__column--d { block-size: 95%; }
+
+/* The concept-project disclosure. It has to stay visible and unmissable, but it
+   is metadata about the card, not a second title — so it reads as a label with a
+   hanging rule instead of the bordered pill it was, which at a glance looked
+   like a disabled text input. */
+.badge {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  font-family: var(--font-label);
+  font-size: calc(0.68rem * var(--script-scale));
+  letter-spacing: calc(var(--tracking-label) * 0.6);
+  text-transform: uppercase;
   color: var(--color-text-muted);
-  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+/* The rule hangs off the first line rather than centring on the block: the
+   label wraps to two lines inside a card column, and a centred rule against
+   wrapped text reads as a stray mark. */
+.badge::before {
+  content: '';
+  flex: none;
+  inline-size: var(--space-4);
+  block-size: 1px;
+  margin-block-start: 0.62em;
+  background: var(--color-border-strong);
 }
 
 .card__links {
   display: flex;
   gap: var(--space-4);
   margin-block-start: auto;
-  padding-block-start: var(--space-2);
+  padding-block-start: var(--space-3);
+  border-block-start: 1px solid var(--color-border);
 }
 
 .card__links a { color: var(--color-accent); font-size: var(--text-sm); }
 
-/* Skills. */
+/* Skills: each group is a row of label and list, echoing the page grid rather
+   than standing as three short columns of unequal length. */
 .skills-groups {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   gap: var(--space-5);
+}
+
+.skills-group { display: grid; gap: var(--space-2); }
+
+@media (min-width: 48rem) {
+  .skills-group {
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: baseline;
+  }
+}
+
+.skills-group + .skills-group {
+  padding-block-start: var(--space-5);
+  border-block-start: 1px solid var(--color-border);
 }
 
 .skills-group h3 {
   font-size: var(--text-base);
-  margin-block: 0 var(--space-2);
+  font-weight: 600;
+  margin: 0;
 }
 
 .tag-list {
@@ -217,13 +560,25 @@
   border-block-start: 1px solid var(--color-border);
 }
 
+.footer .container { display: grid; gap: var(--space-4); }
+
+@media (min-width: 48rem) {
+  .footer .container {
+    grid-template-columns: var(--col-margin) minmax(0, 1fr);
+    gap: var(--space-7);
+    align-items: baseline;
+  }
+}
+
 .footer__name {
   font-weight: 600;
   margin: 0;
 }
 
 /* ------------------------------------------------------------------------
-   Demo-only components, shared by demos/components and demos/commerce.
+   Shared component set: demos/components, demos/commerce, and the hero
+   specimen on the home page, which renders the same .field and .btn classes
+   the demos do.
    ------------------------------------------------------------------------ */
 
 .demo-intro { padding-block-start: var(--space-7); }
@@ -296,7 +651,13 @@
   font-size: var(--text-base);
   font-family: inherit;
   cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out),
+              background-color var(--duration-fast) var(--ease-out),
+              opacity var(--duration-fast) var(--ease-out);
 }
+
+.btn:active { transform: translateY(1px); }
 
 .btn--primary {
   background: var(--color-accent);

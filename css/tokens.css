@@ -62,11 +62,18 @@
   --color-surface:       light-dark(#f6f7f9, #191c22);
   --color-text:          light-dark(#16181d, #e9ecf1);
   --color-text-muted:    light-dark(#5b6270, #a3abb9);
-  --color-accent:        light-dark(#1c5fd6, #7aa7ff);
+  /* Ink teal, not link blue. Two reasons beyond taste. The first is separation:
+     the previous accent (#1c5fd6) sat one hue step from --chart-1 (#2a78d6), so on
+     the dashboard a link and a data series read as the same colour. The second is
+     headroom — measured against this file's own neutrals, teal clears every gate in
+     tools/contrast.test.mjs by a wider margin than the blue it replaces:
+     7.73:1 on --color-bg and 7.21:1 on --color-surface in light, 10.29:1 and 9.37:1
+     in dark, with --color-on-accent at 7.73:1 and 10.45:1 on top of it. */
+  --color-accent:        light-dark(#0b5d57, #5ad3c2);
   --color-on-accent:     light-dark(#ffffff, #0d1017);
   --color-border:        light-dark(#d9dde4, #2a303a); /* decorative — no contrast floor */
   --color-border-strong: light-dark(#767e8c, #666e7c); /* control boundaries — gated at 3:1 */
-  --color-focus:         light-dark(#1c5fd6, #7aa7ff);
+  --color-focus:         light-dark(#0b5d57, #5ad3c2);
 
   /* Chart categorical palette (dataviz skill, dashboard demo). Five slots taken
      from the skill's documented 8-hue default order (blue, orange, aqua, yellow,
@@ -96,12 +103,37 @@
      the English page and another on the Arabic one. */
   --font-arabic: 'IBM Plex Sans Arabic', 'Inter', 'Segoe UI', Tahoma, sans-serif;
 
-  --text-sm: clamp(0.82rem, 0.79rem + 0.14vw, 0.9rem);
-  --text-base: clamp(1rem, 0.96rem + 0.2vw, 1.08rem);
-  --text-lg: clamp(1.16rem, 1.08rem + 0.4vw, 1.35rem);
-  --text-xl: clamp(1.4rem, 1.25rem + 0.75vw, 1.85rem);
-  --text-2xl: clamp(1.75rem, 1.45rem + 1.5vw, 2.6rem);
-  --text-3xl: clamp(2.25rem, 1.7rem + 2.75vw, 4rem);
+  /* The third role, for dates, eyebrows and disclosure labels. It is a system
+     stack rather than a fourth shipped face: an Arabic visit already pays for
+     190 KB of fonts against a 300 KB budget, and a label register is not worth
+     the remainder. --font-label is what markup actually asks for, so the Arabic
+     page keeps IBM Plex Sans Arabic everywhere — a Latin monospace stack has no
+     Arabic glyphs, and asking for one would drop Arabic labels onto whatever
+     system face answered next. In Arabic the label register is carried by size,
+     colour and the leading rule instead of by a change of face. */
+  --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  --font-label: var(--font-mono);
+
+  /* Arabic sits visually smaller than Latin at the same nominal size. The
+     compensation multiplies the scale itself rather than `body { font-size }`,
+     because every heading, nav link, card title and label sizes itself from one
+     of these rem-based tokens — none of which inherit from body, so a scaled
+     body reached only the handful of elements that set no size of their own. */
+  --script-scale: 1;
+  --text-sm: calc(clamp(0.82rem, 0.79rem + 0.14vw, 0.9rem) * var(--script-scale));
+  --text-base: calc(clamp(1rem, 0.96rem + 0.2vw, 1.08rem) * var(--script-scale));
+  --text-lg: calc(clamp(1.16rem, 1.08rem + 0.4vw, 1.35rem) * var(--script-scale));
+  --text-xl: calc(clamp(1.4rem, 1.25rem + 0.75vw, 1.85rem) * var(--script-scale));
+  --text-2xl: calc(clamp(1.75rem, 1.45rem + 1.5vw, 2.6rem) * var(--script-scale));
+  --text-3xl: calc(clamp(2.25rem, 1.7rem + 2.75vw, 4rem) * var(--script-scale));
+
+  /* Latin display sizes are drawn loose by default and need negative tracking.
+     Arabic must never receive it: letter-spacing inserts gaps between letters the
+     shaper joined, which breaks the cursive outright. Both values are therefore
+     tokens that Arabic zeroes, rather than per-element declarations. */
+  --tracking-display: -0.022em;
+  --tracking-heading: -0.012em;
+  --tracking-label: 0.08em;
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -114,11 +146,28 @@
 
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-lg: 12px;
+  /* Elevation is reserved for things that genuinely float — dialogs, the drawer,
+     the toast, and a card while it is hovered. A resting card is flat. */
   --shadow-1: 0 1px 2px rgb(0 0 0 / 6%), 0 4px 16px rgb(0 0 0 / 6%);
   --duration-fast: 160ms;
+  --duration-slow: 420ms;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.3, 1);
 
   --measure: 68ch;
+  /* Width of the metadata column that carries section titles and dates. Wide
+     enough for "Certifications" at --text-lg, including the Arabic uplift. */
+  --col-margin: 12rem;
+}
+
+/* Arabic overrides: the optical size uplift, and the tracking that must not
+   survive the switch. Nothing else about the scale changes. */
+:root[lang='ar'] {
+  --script-scale: 1.08;
+  --tracking-display: 0;
+  --tracking-heading: 0;
+  --tracking-label: 0;
+  --font-label: var(--font-arabic);
 }
 
 /* An explicit choice is expressed purely as a color-scheme override. No colour is

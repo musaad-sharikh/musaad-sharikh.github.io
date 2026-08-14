@@ -53,9 +53,12 @@ greps repository text and extracts the text layer of every published PDF.
 
 Single page, seven sections, anchor navigation:
 
-1. **Hero** — name, title, the summary paragraph, and four actions: email, LinkedIn, GitHub, download CV.
-2. **Experience** — two roles, dates aligned to the inline-end edge, CV bullets verbatim.
-3. **Work** — the three demo projects (see below), each a card linking to its live demo and source.
+1. **Hero** — name, title, the summary paragraph, four actions (email, LinkedIn, GitHub, download
+   CV), and the specimen described below.
+2. **Experience** — two roles, dates in the metadata column, CV bullets verbatim.
+3. **Work** — the three demo projects (see below), each a card opening with a textless miniature
+   of the demo it links to, built from the same tokens and logical properties as the demo itself
+   so it mirrors and re-themes rather than being a picture of a screen.
 4. **Skills** — the CV's three groups: Front-End, Design & Systems, Tools.
 5. **Certifications** — four entries with issuer and year.
 6. **Languages** — Arabic native, English professional working proficiency (STEP 66, Qiyas 2022).
@@ -106,6 +109,26 @@ inline where they occur.
 
 ## Design system
 
+**The hero specimen.** The claim the whole site rests on — one token set, both themes, both
+reading directions — is demonstrated in the hero rather than asserted. A single component, built
+from the same `.field` and `.btn` classes the demos use, is rendered twice side by side: once in
+the reader's own direction under `color-scheme: light`, once mirrored under `color-scheme: dark`.
+Forcing the scheme on each pane is the whole mechanism; every `light-dark()` token resolves
+per-pane, so no colour is restated and the two panes cannot drift from the rest of the site.
+
+It is deliberately not dual-*script*. Painting Arabic on the English page would fetch an Arabic
+face that an English reader is documented never to download, so the specimen would have cost the
+site the guarantee it exists to demonstrate. Mirroring is a layout property, and that is what it
+shows. The stage is `aria-hidden` with no interactive elements inside it; the `figcaption` is its
+accessible equivalent, the same arrangement the dashboard charts have with their data tables.
+
+**Layout.** Sections are laid out on a two-column grid: a metadata column carrying the section
+title (and, in the experience list, the date range) and a content column beside it. Both columns
+are logical, so RTL mirrors with no direction-specific rule. Below 64rem the grid collapses and
+the title returns to sitting above its content, where a hairline under it marks the boundary the
+column would otherwise mark. Demo pages, which have no metadata column, keep that rule at every
+width.
+
 **Tokens.** One `:root` block of custom properties defines the entire visual language:
 color, type scale, spacing scale, radii, shadow, and motion duration. Both themes and all
 three demos consume the same tokens. Changing a token changes the site and every demo at once
@@ -129,10 +152,25 @@ form fields. Every gated pair is verified by a contrast script rather than by ey
 
 **Type.** Latin and Arabic are set in different families, sized so their x-heights and visual
 weight match rather than their nominal point size — Arabic typically needs a slightly larger
-size to sit correctly next to Latin, applied via `[lang="ar"]` on the root.
+size to sit correctly next to Latin.
 
 - Latin: Inter, self-hosted WOFF2 variable, with a system-UI fallback stack.
 - Arabic: IBM Plex Sans Arabic, self-hosted WOFF2 at three static weights.
+- Labels: dates, the concept-project disclosure, and the specimen tags use a system monospace
+  stack in Latin. No fourth face is shipped for it — an Arabic visit already pays for 190 KB of
+  fonts against a 300 KB budget — and Arabic resolves the same token to IBM Plex Sans Arabic,
+  because a Latin monospace stack carries no Arabic glyphs and would drop those labels onto an
+  arbitrary system face. In Arabic the label register is carried by size, colour and the leading
+  rule instead of by a change of face.
+
+The Arabic uplift multiplies the type scale itself, under `:root[lang='ar']`, rather than `body`'s
+font size. Every heading, nav link, card title and label sizes itself from a rem-based token and
+none of them inherit from `body`, so scaling `body` reached only the few elements that set no size
+of their own.
+
+Latin display sizes carry negative tracking, held in tokens that `:root[lang='ar']` zeroes.
+Letter-spacing must never reach Arabic: it inserts gaps between letters the shaper joined, which
+breaks the cursive outright.
 
 Inter is variable, so one file covers its whole weight range. IBM Plex Sans Arabic has no
 variable build, so each weight is a separate face; only the three the design actually paints
@@ -162,8 +200,12 @@ documented system stack (`system-ui` for Latin, `"Segoe UI", Tahoma` plus the OS
 **Fluid scale.** Type and spacing use `clamp()` against viewport width, so the layout has no
 breakpoint jumps. Explicit breakpoints exist only where the grid genuinely changes shape.
 
-**Motion.** Entrance transitions are short and subtle, gated behind
-`@media (prefers-reduced-motion: no-preference)`. Nothing animates on the critical path.
+**Motion.** One orchestrated entrance, on the hero only: name, tagline, summary, actions and
+specimen rise 8px into place in sequence. Nothing below the fold animates on scroll. Hover and
+state changes transition at `--duration-fast`. The global `prefers-reduced-motion` block collapses
+every duration to nothing, which is why the transitions themselves are declared unconditionally —
+the guard is already there, and the entrance uses `backwards` fill so a collapsed animation still
+resolves to the visible end state rather than leaving an element at opacity 0.
 
 ## Accessibility requirements
 

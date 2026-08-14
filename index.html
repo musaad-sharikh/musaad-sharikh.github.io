@@ -65,7 +65,15 @@
       </ul>
       <div class="nav__toggles">
         <button type="button" id="lang-toggle" class="toggle" aria-pressed="false" aria-label="Switch to Arabic">ع</button>
-        <button type="button" id="theme-toggle" class="toggle" aria-pressed="false" aria-label="Switch to dark theme">🌙</button>
+        <button type="button" id="theme-toggle" class="toggle" aria-pressed="false" aria-label="Switch to dark theme">
+          <svg class="toggle__icon toggle__icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/>
+          </svg>
+          <svg class="toggle__icon toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="4.2"/>
+            <path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/>
+          </svg>
+        </button>
       </div>
     </nav>
   </header>
@@ -74,53 +82,94 @@
 
     <section id="about" class="hero" aria-labelledby="about-title">
       <div class="container">
-        <h2 class="visually-hidden" id="about-title" data-i18n="about.title">About</h2>
-        <h1 data-i18n="hero.name">Musaad Muhammad</h1>
-        <p class="hero__tagline" data-i18n="hero.title">Design Engineer · Front-End & UI</p>
-        <p class="hero__summary" data-i18n="hero.summary">I'm a UI designer who learned to build what I design. After seven years designing web interfaces, I now write the front-end too — HTML, CSS, and JavaScript — so I can take a screen from a Figma file all the way to a working page. I'm most useful where design and front-end meet: component libraries, prototypes, and clean hand-offs.</p>
-        <ul class="actions">
-          <li><a class="action" href="mailto:musaad.sharikh@gmail.com" data-i18n="actions.email">Email</a></li>
-          <li><a class="action" href="https://linkedin.com/in/musaad-muhammad" rel="noopener" data-i18n="actions.linkedin">LinkedIn</a></li>
-          <li><a class="action" href="https://github.com/musaad-sharikh" rel="noopener" data-i18n="actions.github">GitHub</a></li>
-          <li><a class="action action--primary" href="assets/cv/Musaad-Muhammad-CV-EN.pdf" data-i18n="actions.cv" data-i18n-attr="href:cv.href">Download CV</a></li>
-        </ul>
+        <div class="hero__copy">
+          <h2 class="visually-hidden" id="about-title" data-i18n="about.title">About</h2>
+          <h1 data-i18n="hero.name">Musaad Muhammad</h1>
+          <p class="hero__tagline" data-i18n="hero.title">Design Engineer · Front-End & UI</p>
+          <p class="hero__summary" data-i18n="hero.summary">I'm a UI designer who learned to build what I design. After seven years designing web interfaces, I now write the front-end too — HTML, CSS, and JavaScript — so I can take a screen from a Figma file all the way to a working page. I'm most useful where design and front-end meet: component libraries, prototypes, and clean hand-offs.</p>
+          <ul class="actions">
+            <li><a class="action" href="mailto:musaad.sharikh@gmail.com" data-i18n="actions.email">Email</a></li>
+            <li><a class="action" href="https://linkedin.com/in/musaad-muhammad" rel="noopener" data-i18n="actions.linkedin">LinkedIn</a></li>
+            <li><a class="action" href="https://github.com/musaad-sharikh" rel="noopener" data-i18n="actions.github">GitHub</a></li>
+            <li><a class="action action--primary" href="assets/cv/Musaad-Muhammad-CV-EN.pdf" data-i18n="actions.cv" data-i18n-attr="href:cv.href">Download CV</a></li>
+          </ul>
+        </div>
+
+        <!-- The specimen: one component, two schemes, both reading directions,
+             rendered from the site's own tokens and classes. The stage is
+             aria-hidden and holds no controls — the caption below is its
+             accessible equivalent, the same pattern the dashboard charts use. -->
+        <figure class="specimen">
+          <div class="specimen__stage" aria-hidden="true">
+            <div class="specimen__pane specimen__pane--light">
+              <span class="specimen__tag" data-i18n="specimen.light">Light</span>
+              <div class="field">
+                <span class="field__label" data-i18n="specimen.fieldLabel">Email address</span>
+                <span class="field__control"></span>
+              </div>
+              <span class="btn btn--primary" data-i18n="specimen.action">Save changes</span>
+            </div>
+            <div class="specimen__pane specimen__pane--dark specimen__pane--flip">
+              <span class="specimen__tag" data-i18n="specimen.dark">Dark</span>
+              <div class="field">
+                <span class="field__label" data-i18n="specimen.fieldLabel">Email address</span>
+                <span class="field__control"></span>
+              </div>
+              <span class="btn btn--primary" data-i18n="specimen.action">Save changes</span>
+            </div>
+          </div>
+          <figcaption class="specimen__caption" data-i18n="specimen.caption">One component, one set of tokens — rendered in light and dark, and in both reading directions.</figcaption>
+        </figure>
       </div>
     </section>
 
     <section id="experience" class="section" aria-labelledby="experience-title">
-      <div class="container">
+      <div class="container section__grid">
         <h2 class="section__title" id="experience-title" data-i18n="exp.title">Work Experience</h2>
-        <ol class="timeline stack">
+        <ol class="timeline">
           <li class="timeline__item">
-            <div class="timeline__role">
+            <span class="timeline__date" data-i18n="exp.adawliah.date">2019 – 2024</span>
+            <div class="timeline__body">
               <span class="timeline__position" data-i18n="exp.adawliah.role">UX/UI Designer — aDawliah</span>
-              <span class="timeline__date" data-i18n="exp.adawliah.date">2019 – 2024</span>
+              <ul class="timeline__bullets list stack" role="list">
+                <li data-i18n="exp.adawliah.b1">Designed 70+ screens and wireframes in Figma for e-commerce and dashboard products, and wrote the specs engineers built from.</li>
+                <li data-i18n="exp.adawliah.b2">Built the team's first shared component library in Figma, which cut design-to-dev revision cycles by about 30%.</li>
+                <li data-i18n="exp.adawliah.b3">Worked directly with front-end engineers to turn wireframes into working prototypes.</li>
+              </ul>
             </div>
-            <ul class="timeline__bullets stack">
-              <li data-i18n="exp.adawliah.b1">Designed 70+ screens and wireframes in Figma for e-commerce and dashboard products, and wrote the specs engineers built from.</li>
-              <li data-i18n="exp.adawliah.b2">Built the team's first shared component library in Figma, which cut design-to-dev revision cycles by about 30%.</li>
-              <li data-i18n="exp.adawliah.b3">Worked directly with front-end engineers to turn wireframes into working prototypes.</li>
-            </ul>
           </li>
           <li class="timeline__item">
-            <div class="timeline__role">
+            <span class="timeline__date" data-i18n="exp.freelance.date">2017 – 2019</span>
+            <div class="timeline__body">
               <span class="timeline__position" data-i18n="exp.freelance.role">Freelance UI Designer & Front-End</span>
-              <span class="timeline__date" data-i18n="exp.freelance.date">2017 – 2019</span>
+              <ul class="timeline__bullets list stack" role="list">
+                <li data-i18n="exp.freelance.b1">Took 5+ small-business and startup projects from first brief to a live site, handling both the design and the build.</li>
+                <li data-i18n="exp.freelance.b2">Hand-coded responsive layouts in HTML and CSS, and shipped each one inside a two-week window.</li>
+              </ul>
             </div>
-            <ul class="timeline__bullets stack">
-              <li data-i18n="exp.freelance.b1">Took 5+ small-business and startup projects from first brief to a live site, handling both the design and the build.</li>
-              <li data-i18n="exp.freelance.b2">Hand-coded responsive layouts in HTML and CSS, and shipped each one inside a two-week window.</li>
-            </ul>
           </li>
         </ol>
       </div>
     </section>
 
     <section id="work" class="section" aria-labelledby="work-title">
-      <div class="container">
+      <div class="container section__grid">
         <h2 class="section__title" id="work-title" data-i18n="work.title">Work</h2>
         <div class="cards">
           <article class="card">
+            <!-- Miniatures are boxes, not pictures: they are built from the same
+                 tokens and logical properties as the demo they stand for, so they
+                 mirror under RTL and re-theme for free. -->
+            <div class="mini" aria-hidden="true">
+              <div class="mini__col">
+                <span class="mini__bar mini__bar--short"></span>
+                <span class="mini__field"></span>
+                <div class="mini__row">
+                  <span class="mini__pill"></span>
+                  <span class="mini__pill mini__pill--ghost"></span>
+                </div>
+              </div>
+            </div>
             <h3 data-i18n="work.componentLibrary.title">Component Library</h3>
             <p data-i18n="work.componentLibrary.desc">A live design system: buttons, form fields, tabs, dialogs and toasts, each shown in light and dark and in both reading directions.</p>
             <p class="badge" data-i18n="work.badge">Personal concept project — not client work</p>
@@ -130,6 +179,17 @@
             </div>
           </article>
           <article class="card">
+            <div class="mini" aria-hidden="true">
+              <div class="mini__grid">
+                <span class="mini__tile"></span>
+                <span class="mini__tile"></span>
+                <span class="mini__tile"></span>
+                <span class="mini__tile"></span>
+                <span class="mini__tile"></span>
+                <span class="mini__tile"></span>
+              </div>
+              <span class="mini__drawer"></span>
+            </div>
             <h3 data-i18n="work.commerceFlow.title">Commerce Flow</h3>
             <p data-i18n="work.commerceFlow.desc">A working shopping slice — product grid, cart drawer, and a checkout form with accessible, translated validation.</p>
             <p class="badge" data-i18n="work.badge">Personal concept project — not client work</p>
@@ -139,6 +199,17 @@
             </div>
           </article>
           <article class="card">
+            <div class="mini" aria-hidden="true">
+              <div class="mini__col">
+                <span class="mini__bar mini__bar--mid"></span>
+                <div class="mini__plot">
+                  <span class="mini__column mini__column--a"></span>
+                  <span class="mini__column mini__column--b"></span>
+                  <span class="mini__column mini__column--c"></span>
+                  <span class="mini__column mini__column--d"></span>
+                </div>
+              </div>
+            </div>
             <h3 data-i18n="work.dashboard.title">Dashboard</h3>
             <p data-i18n="work.dashboard.desc">An analytics view built from hand-authored SVG, where every chart is paired with the same data as a keyboard-navigable table.</p>
             <p class="badge" data-i18n="work.badge">Personal concept project — not client work</p>
@@ -151,10 +222,10 @@
       </div>
     </section>
 
-    <section id="skills" class="section" aria-labelledby="skills-title">
-      <div class="container">
+    <section id="skills" class="section section--tight" aria-labelledby="skills-title">
+      <div class="container section__grid">
         <h2 class="section__title" id="skills-title" data-i18n="skills.title">Skills</h2>
-        <div class="skills-groups stack">
+        <div class="skills-groups">
           <div class="skills-group">
             <h3 data-i18n="skills.frontend.label">Front-End</h3>
             <p class="tag-list" data-i18n="skills.frontend.list">HTML5, CSS3, JavaScript (ES6+), Responsive Web Design, Git &amp; GitHub</p>
@@ -171,10 +242,10 @@
       </div>
     </section>
 
-    <section id="certifications" class="section" aria-labelledby="certifications-title">
-      <div class="container">
+    <section id="certifications" class="section section--tight" aria-labelledby="certifications-title">
+      <div class="container section__grid">
         <h2 class="section__title" id="certifications-title" data-i18n="certs.title">Certifications</h2>
-        <ul class="stack">
+        <ul class="list stack" role="list">
           <li data-i18n="certs.meta">Programming with JavaScript — Meta (Coursera, 2025)</li>
           <li data-i18n="certs.tuwaiq">JavaScript 101 — Tuwaiq Academy, Sater Platform (2025)</li>
           <li data-i18n="certs.fcc">Responsive Web Design — freeCodeCamp (2024)</li>
@@ -183,8 +254,8 @@
       </div>
     </section>
 
-    <section id="languages" class="section" aria-labelledby="languages-title">
-      <div class="container">
+    <section id="languages" class="section section--tight" aria-labelledby="languages-title">
+      <div class="container section__grid">
         <h2 class="section__title" id="languages-title" data-i18n="langs.title">Languages</h2>
         <p data-i18n="langs.body">Arabic (native) · English (professional working proficiency — STEP 66, Qiyas 2022)</p>
       </div>

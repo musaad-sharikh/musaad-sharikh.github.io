@@ -1,8 +1,12 @@
-/* Chrome that only makes sense on screen. */
+/* Chrome that only makes sense on screen. The specimen and the card miniatures
+   are demonstrations of theme and direction, both of which stop existing on
+   paper — printed, they are empty boxes. */
 .nav,
 .toggle,
 .skip-link,
-.footer .actions {
+.footer .actions,
+.specimen,
+.mini {
   display: none;
 }
 

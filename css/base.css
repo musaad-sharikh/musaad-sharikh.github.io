@@ -10,16 +10,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Arabic sits visually smaller than Latin at the same nominal size. */
+/* The size uplift lives on the scale itself (tokens.css), so all this has to
+   carry is the family and the looser leading Arabic wants. */
 :root[lang='ar'] body {
   font-family: var(--font-arabic);
-  font-size: calc(var(--text-base) * 1.08);
   line-height: 1.9;
 }
 
 :where(a) { color: var(--color-accent); }
 
-:where(h1, h2, h3) { line-height: 1.2; text-wrap: balance; }
+:where(h1, h2, h3) {
+  line-height: 1.2;
+  text-wrap: balance;
+  letter-spacing: var(--tracking-heading);
+}
+
+h1 { letter-spacing: var(--tracking-display); }
 
 :where(p) { max-inline-size: var(--measure); text-wrap: pretty; }
 
@@ -64,11 +70,85 @@ body {
 
 .section { padding-block: var(--space-8); }
 
+/* Short sections — skills, certifications, languages — carry less padding than
+   the three that hold the argument, so the page does not close on three bands of
+   near-empty space all weighted like the hero. */
+.section--tight { padding-block: var(--space-7); }
+
+/* Anchor targets clear the sticky header instead of landing under it. */
+.section, .hero { scroll-margin-block-start: var(--space-7); }
+
+/* The page grid: a metadata column holding the section title, and the content
+   column beside it. Below 64rem it collapses and the title simply sits above its
+   content. Logical columns, so RTL mirrors with no direction-specific rule. */
+.section__grid { display: grid; gap: var(--space-4); }
+
+@media (min-width: 64rem) {
+  .section__grid {
+    grid-template-columns: var(--col-margin) minmax(0, 1fr);
+    gap: var(--space-7);
+    align-items: start;
+  }
+}
+
+/* Section titles label their section rather than announcing it across the full
+   measure. The rule under the title is what marks the boundary wherever the
+   metadata column is not in play — every demo page, which stacks its sections
+   in one column, and the home page below 64rem where the grid has collapsed.
+   Where the column IS in play, the layout says it instead and the rule goes. */
 .section__title {
-  font-size: var(--text-xl);
-  margin-block: 0 var(--space-5);
+  margin-block: 0 var(--space-4);
   padding-block-end: var(--space-2);
   border-block-end: 1px solid var(--color-border);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+@media (min-width: 64rem) {
+  .section__grid > .section__title {
+    margin-block-end: 0;
+    padding-block-end: 0;
+    border-block-end: 0;
+  }
+}
+
+/* Flush list with a hanging rule for a marker. Used by both the experience
+   bullets and the certifications list, which previously landed on two different
+   browser defaults (disc and circle) by accident. `role="list"` is on the markup
+   because removing list-style also removes list semantics in some screen
+   readers. */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list > li {
+  position: relative;
+  padding-inline-start: var(--space-5);
+}
+
+.list > li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.75em;
+  inline-size: var(--space-3);
+  block-size: 1px;
+  background: var(--color-border-strong);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* One orchestrated entrance, on the hero only — nothing below the fold animates
+   on scroll. The global reduced-motion block below collapses the duration, and
+   `backwards` fill means a collapsed animation still resolves to the visible
+   end state rather than leaving the element at opacity 0. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

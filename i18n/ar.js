@@ -35,6 +35,16 @@ export default {
   'actions.cv': 'تحميل السيرة الذاتية',
   'cv.href': 'assets/cv/Musaad-Muhammad-CV-AR.pdf',
 
+  // Hero specimen. The two panes render the same component, so both carry the
+  // same label and action strings; the difference between them is the colour
+  // scheme and the reading direction, not the copy.
+  'specimen.light': 'فاتح',
+  'specimen.dark': 'داكن',
+  'specimen.fieldLabel': 'البريد الإلكتروني',
+  'specimen.action': 'حفظ التغييرات',
+  'specimen.caption':
+    'مكوّن واحد من مجموعة رموز تصميم واحدة — معروض في الوضعين الفاتح والداكن وفي اتجاهي الكتابة.',
+
   'exp.title': 'الخبرة العملية',
   'exp.adawliah.role': 'مصمّم واجهات (UX/UI) — aDawliah',
   'exp.adawliah.role#html': 'مصمّم واجهات (<span lang="en" dir="ltr">UX/UI</span>) — <span lang="en" dir="ltr">aDawliah</span>',
