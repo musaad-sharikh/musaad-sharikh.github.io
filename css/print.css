@@ -26,8 +26,24 @@
   box-shadow: none;
 }
 
-/* Links carry no color on paper, so the destination is spelled out instead. */
-a[href^="http"]::after {
+/* The primary action carries white-on-accent for the screen. Browsers drop
+   background colours when printing unless asked not to, so left alone the CV
+   link printed as white text on white paper — the page's main call to action,
+   invisible. Colour has to be restated here, not just the fill: --color-on-accent
+   is a separate token from --color-text and the :root override above does not
+   reach it. */
+.action--primary {
+  background: none;
+  color: var(--color-text);
+  border-color: currentColor;
+}
+
+/* Links carry no color on paper, so the destination is spelled out instead.
+   mailto: is included because the address exists only in the href — the visible
+   text is the word "Email", so a printed copy carried no way to reach him.
+   Printing the raw href keeps the address in exactly one place in the markup. */
+a[href^="http"]::after,
+a[href^="mailto:"]::after {
   content: " (" attr(href) ")";
 }
 
