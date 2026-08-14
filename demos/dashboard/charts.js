@@ -45,9 +45,27 @@ function svgWrap({ width, height, body }) {
 // ---------------------------------------------------------------------------
 
 const LINE_PAD = { top: 12, right: 12, bottom: 24, left: 12 };
+const LINE_LABEL_GAP = 8; // gap between the end marker and its direct label
+const LINE_LABEL_CHAR = 6.2; // ≈ advance width of one character at font-size 11
+
+/** Horizontal padding wide enough for the longest end-label to sit inside the
+ *  viewBox. Without it the label is drawn past the plot's own edge and the SVG
+ *  simply clips it — "Organic" rendered as a lone "O". Applied to BOTH sides
+ *  because mirrorX() reflects around the full width, so the plot only lands back
+ *  inside the box under RTL while the two paddings stay equal. */
+function linePadding(series) {
+  const longest = series.reduce(
+    (max, s) => Math.max(max, s.label == null ? 0 : String(s.label).length),
+    0,
+  );
+  if (!longest) return LINE_PAD;
+  const room = Math.round(longest * LINE_LABEL_CHAR) + LINE_LABEL_GAP;
+  const side = Math.max(LINE_PAD.left, room);
+  return { ...LINE_PAD, left: side, right: side };
+}
 
 export function lineChart({ series = [], width, height, dir = 'ltr', xLabels = [] }) {
-  const pad = LINE_PAD;
+  const pad = linePadding(series);
   const plotW = Math.max(width - pad.left - pad.right, 1);
   const plotH = Math.max(height - pad.top - pad.bottom, 1);
 
@@ -96,7 +114,9 @@ export function lineChart({ series = [], width, height, dir = 'ltr', xLabels = [
       // Direct end-label — the mark spec's "label the endpoint" rule; the legend
       // (real DOM, outside this aria-hidden SVG) still carries identity for AT.
       const anchor = dir === 'rtl' ? 'end' : 'start';
-      const labelX = dir === 'rtl' ? Number(lastX) - 8 : Number(lastX) + 8;
+      const labelX = dir === 'rtl'
+        ? Number(lastX) - LINE_LABEL_GAP
+        : Number(lastX) + LINE_LABEL_GAP;
       const label = s.label != null
         ? `<text x="${labelX}" y="${Number(lastY) + 3}" text-anchor="${anchor}" `
           + `font-size="11" fill="var(--color-text)">${esc(s.label)}</text>`

@@ -1047,6 +1047,16 @@
 
 .chart-figure svg { inline-size: 100%; block-size: auto; }
 
+/* A donut's viewBox is square, so stretching it to the figure width made it as
+   tall as the figure is wide — one chart filling a whole screen. It is capped
+   and centred instead; the other two charts are wide by nature and still fill
+   the figure. */
+.chart-figure__canvas--donut svg {
+  max-inline-size: 17rem;
+  margin-inline: auto;
+  display: block;
+}
+
 .chart-legend {
   display: flex;
   flex-wrap: wrap;
