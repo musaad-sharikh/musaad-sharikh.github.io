@@ -71,31 +71,49 @@ export function createI18n({ root, dictionary, statusEl = null }) {
     }
   }
 
-  function apply(lang) {
+  /** `userInitiated` separates "the reader chose this" from "this is how the page
+   *  happened to load", and only a choice is allowed to leave a trace.
+   *
+   *  Persisting on load let any shared `?lang=` link overwrite a preference the
+   *  reader had deliberately set: open a colleague's `?lang=en` link once and the
+   *  stored `ar` was gone. Rewriting the URL on load did the same damage one step
+   *  removed — a first-time visitor who never chose anything got `?lang=en` in the
+   *  address bar, and every link they shared from there pinned English on the
+   *  recipient. And announcing on load told a screen-reader user their language
+   *  had changed on a page they had only just opened.
+   *
+   *  The query parameter still decides what THIS page renders (see
+   *  resolveLanguage); it just no longer speaks for the reader. */
+  function apply(lang, { userInitiated = false } = {}) {
     current = LANGS.includes(lang) ? lang : DEFAULT_LANG;
     const el = root.documentElement;
     el.lang = current;
     el.dir = DIR[current];
     applyText(current);
     applyAttrs(current);
-    writeStored(current);
 
-    const url = new URL(root.location.href);
-    url.searchParams.set('lang', current);
-    history.replaceState(null, '', url);
+    if (userInitiated) {
+      writeStored(current);
 
-    if (statusEl) {
-      statusEl.textContent = current === 'ar' ? 'تم تغيير اللغة إلى العربية'
-                                              : 'Language changed to English';
+      const url = new URL(root.location.href);
+      url.searchParams.set('lang', current);
+      history.replaceState(null, '', url);
+
+      if (statusEl) {
+        statusEl.textContent = current === 'ar' ? 'تم تغيير اللغة إلى العربية'
+                                                : 'Language changed to English';
+      }
     }
+
     root.dispatchEvent(new CustomEvent('languagechange', { detail: { lang: current } }));
   }
 
   return {
     apply,
     current: () => current,
+    // The only caller that is, by definition, a deliberate choice.
     toggle() {
-      apply(oppositeOf(current));
+      apply(oppositeOf(current), { userInitiated: true });
       return current;
     },
     boot() {
