@@ -97,6 +97,26 @@ const prose = (page) => page.evaluate(() => {
   return main.innerText;
 });
 
+/** The same prose with the DELIBERATE Latin removed as well: every brand and
+ *  technology name inside an Arabic sentence is wrapped in <span lang="en"> for
+ *  the bidi algorithm and for screen-reader pronunciation, so those runs are
+ *  translated content, not missing translation.
+ *
+ *  Subtracting them is what makes the leftover count mean one thing on every
+ *  page. The old gate counted them, so the threshold had to be loose enough for
+ *  the home page's 217 characters of legitimate brand names — which left the
+ *  three demo pages (57, 17 and 0 characters) with 160+ characters of slack, i.e.
+ *  room for a whole forgotten paragraph to pass unnoticed. */
+const untranslatedLatin = (page) => page.evaluate(() => {
+  const main = document.querySelector('main').cloneNode(true);
+  for (const el of main.querySelectorAll('pre, code, .field__control, [lang="en"]')) el.remove();
+  // Count Latin letters directly rather than subtracting everything that is not
+  // Arabic: the subtractive form counted invisible bidi marks (U+200F) and
+  // variation selectors as leftover Latin, which is how the commerce page scored
+  // 17 characters of "untranslated text" that did not exist.
+  return (main.innerText.match(/[A-Za-z]/g) ?? []).join('');
+});
+
 // ─────────────────────────────────────────── A. load, console, network
 await group('A. pages load with no console or network errors', async () => {
   for (const { path, name } of PAGES) {
@@ -133,8 +153,14 @@ await group('B. language switching', async () => {
     const arText = await prose(page);
     check(`${name}: main content actually changed`, arText !== enText);
     check(`${name}: Arabic script present`, /[؀-ۿ]/.test(arText));
-    const latinLeft = arText.replace(/[؀-ۿ\s\d\p{P}\p{S}]/gu, '');
-    check(`${name}: no large block of untranslated Latin`, latinLeft.length < 220,
+    // Deliberate <span lang="en"> runs are excluded, so anything left is Latin
+    // that nobody translated. The allowance is for stray characters, not for
+    // whole strings.
+    const latinLeft = await untranslatedLatin(page);
+    // Zero, not a budget. Every legitimate Latin run in Arabic copy is wrapped in
+    // <span lang="en"> per the design spec, and those are excluded above — so a
+    // single leftover letter is a string somebody forgot to translate.
+    check(`${name}: no untranslated Latin outside lang="en" runs`, latinLeft.length === 0,
       `${latinLeft.length} Latin chars remain: ${latinLeft.slice(0, 120)}`);
 
     check(`${name}: URL carries ?lang=ar`, page.url().includes('lang=ar'), page.url());
@@ -198,8 +224,11 @@ await group('B2. Arabic font is IBM Plex and loads only when needed', async () =
     const span = document.querySelector('main [lang="en"]');
     return span ? getComputedStyle(span).fontFamily : null;
   });
+  // Not `latinFamily === null || …`: the wrappers disappearing is the regression
+  // this check exists to catch, and treating their absence as a pass meant the
+  // check reported success precisely when it had nothing left to verify.
   check('an embedded Latin run resolves through the Arabic stack',
-    latinFamily === null || latinFamily.includes('Inter'), `${latinFamily}`);
+    latinFamily !== null && latinFamily.includes('Inter'), `${latinFamily}`);
 
   const applied = await ar.evaluate(() => {
     const fam = (el) => getComputedStyle(el).fontFamily;
@@ -447,15 +476,61 @@ await group('F. commerce form validation', async () => {
   const errors = watch(page);
   await page.goto(`${BASE}/demos/commerce/`, { waitUntil: 'networkidle' });
 
-  // Add an item, open the cart
-  const addBtn = page.locator('[data-add], button:has-text("Add")').first();
-  if (await addBtn.count()) {
-    await addBtn.click();
-    await page.waitForTimeout(200);
-  }
+  // Add an item, open the cart.
+  //
+  // The selector is the real attribute. It used to be `[data-add]`, which matches
+  // nothing — the click only landed because of a `button:has-text("Add")`
+  // fallback, i.e. on the English wording of a label. Reword the button and the
+  // add silently stopped happening, while every check below still passed: an
+  // empty cart opens the same drawer and reaches the same checkout form.
+  const addBtn = page.locator('[data-add-to-cart]').first();
+  check('add-to-cart buttons exist', await addBtn.count() > 0);
+  const cartCount = () => page.evaluate(() =>
+    Number(document.querySelector('#cart-badge')?.textContent ?? '0'));
+
+  check('cart starts empty', await cartCount() === 0, `badge showed ${await cartCount()}`);
+  await addBtn.click();
+  await page.waitForTimeout(200);
+  check('adding an item updates the cart count', await cartCount() === 1, `badge showed ${await cartCount()}`);
+
   await page.click('#cart-trigger');
   await page.waitForTimeout(300);
   check('cart drawer opens', await page.evaluate(() => !!document.querySelector('dialog[open]')));
+
+  const lineCount = () => page.locator('#cart-lines .cart-line').count();
+  check('the added item appears as a cart line', await lineCount() === 1, `${await lineCount()} lines`);
+
+  // Quantity editing — a feature the design spec names for this demo and which
+  // nothing here used to exercise.
+  await page.locator('.cart-line__qty button').last().click();
+  await page.waitForTimeout(200);
+  check('increasing quantity updates the count', await cartCount() === 2, `badge showed ${await cartCount()}`);
+
+  // Rebuilding the list must not drop the keyboard user out of the open dialog.
+  await page.locator('.cart-line__qty button').last().focus();
+  await page.locator('.cart-line__qty button').last().click();
+  await page.waitForTimeout(200);
+  const focusAfterQty = await page.evaluate(() => document.activeElement?.className || 'BODY');
+  check('focus survives a quantity change', focusAfterQty.includes('stepper__btn'), `focus on ${focusAfterQty}`);
+
+  await page.locator('.cart-line__remove').first().focus();
+  await page.locator('.cart-line__remove').first().click();
+  await page.waitForTimeout(250);
+  const afterRemove = await page.evaluate(() => ({
+    focus: document.activeElement?.className || document.activeElement?.tagName || '?',
+    open: !!document.querySelector('dialog[open]'),
+  }));
+  check('removing the last line empties the cart', await cartCount() === 0, `badge showed ${await cartCount()}`);
+  check('focus stays inside the drawer after a removal',
+    afterRemove.open && afterRemove.focus !== 'BODY', JSON.stringify(afterRemove));
+
+  // Put an item back so the checkout assertions below run against a real cart.
+  await page.evaluate(() => document.querySelector('dialog[open]')?.close());
+  await page.waitForTimeout(150);
+  await addBtn.click();
+  await page.waitForTimeout(200);
+  await page.click('#cart-trigger');
+  await page.waitForTimeout(300);
 
   // Reach the checkout form and submit it empty
   const goCheckout = page.locator('#cart-checkout-btn');
@@ -486,9 +561,16 @@ await group('F. commerce form validation', async () => {
   check('focus moves to the first invalid field', invalid.includes(focused),
     `focused #${focused}, expected one of ${invalid.join(', ')}`);
 
+  // Specifically the checkout summary. `document.querySelector('[aria-live]')`
+  // returned the cart-count region, which always has text, so this passed
+  // whether or not the failure was ever announced.
   const live = await page.evaluate(() =>
-    document.querySelector('[aria-live]')?.textContent?.trim());
-  check('an aria-live region announces the failure', !!live && live.length > 0, `live="${live}"`);
+    document.querySelector('#checkout-summary')?.textContent?.trim());
+  check('the checkout summary announces the failure', !!live && live.length > 0, `live="${live}"`);
+  const liveRegions = await page.evaluate(() => [...document.querySelectorAll('[aria-live]')]
+    .map((el) => el.textContent.trim()).filter(Boolean));
+  check('the failure is announced once, not by two live regions at the same time',
+    liveRegions.filter((text) => text === live).length === 1, JSON.stringify(liveRegions));
 
   // Same again in Arabic — messages must be translated.
   // Close any open modal first: an open <dialog> makes the rest of the document

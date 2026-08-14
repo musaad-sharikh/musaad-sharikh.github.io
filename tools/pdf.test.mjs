@@ -5,13 +5,17 @@ import { promisify } from 'node:util';
 import { readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+// The one place the number's shape is written down. This file used to keep its
+// own copy, using the unbounded-gap pattern forbidden.mjs documents as broken —
+// two gates drifting apart is how one of them ends up silenced.
+import { PHONE } from './lib/forbidden.mjs';
 
 const run = promisify(execFile);
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CV_DIR = join(ROOT, 'assets/cv');
 
 // Digits of the private number, tolerant of any separator or line break between them.
-const PHONE = /9\D*6\D*6\D*5\D*1\D*2\D*3\D*0\D*2\D*7\D*2\D*5/;
+
 
 const pdfs = (await readdir(CV_DIR)).filter((f) => f.endsWith('.pdf'));
 

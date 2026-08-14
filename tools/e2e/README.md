@@ -1,8 +1,8 @@
 # End-to-end suite
 
-124 browser checks over all four pages: language switching, dark/light mode,
-keyboard navigation, responsive layouts, form validation, and console/network
-errors.
+133 browser checks over all four pages: language switching, dark/light mode,
+keyboard navigation, responsive layouts, cart and form behaviour, and
+console/network errors.
 
 This is a **development tool and is never served**. The site itself still ships
 with zero dependencies — there is no `package.json` here, and this script is not
@@ -35,4 +35,9 @@ name before they look at what kind of entry it is (see `tools/lib/html.mjs`).
   clicking anything in the header, or the click lands on nothing and the test
   fails for a reason that has nothing to do with the bug it was written to catch.
 - The untranslated-text check strips `pre`/`code` — code samples are meant to
-  stay in English.
+  stay in English — and also `[lang="en"]`, because every brand or technology
+  name inside an Arabic sentence is deliberately wrapped in one. What is left is
+  Latin nobody translated, so the gate is zero rather than a character budget. A
+  loose budget is not a gate: the old one allowed 220 characters, which the home
+  page nearly filled with legitimate names while leaving room on the demo pages
+  for a whole forgotten paragraph.
