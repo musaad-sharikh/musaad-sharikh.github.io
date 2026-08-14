@@ -1,7 +1,23 @@
 import { readdir, readFile, readlink } from 'node:fs/promises';
 import { join, extname } from 'node:path';
 
-const SKIP_DIRS = new Set(['.git', 'node_modules', '.superpowers']);
+/** The only two directories a scan may skip, and both for the same reason: their
+ *  contents are not this repository's text.
+ *
+ *  `.git` is object storage, and `node_modules` is another checkout linked in for
+ *  the Playwright run (see tools/e2e/README.md).
+ *
+ *  `.superpowers` used to be on this list. It held generated workflow artifacts,
+ *  which is exactly why skipping it was wrong: three of those artifacts quoted the
+ *  private phone number and the vault path while documenting the privacy guard's
+ *  own test procedure, and privacy.test.mjs passed anyway because the walker
+ *  discarded the directory by name before reading a byte. A scan that decides what
+ *  is sensitive by directory name is not a scan. Being gitignored is not a defence
+ *  either — an ignore rule can be edited, and a file can be force-added.
+ *
+ *  Adding a name here silently narrows every checker built on this function. Do
+ *  not, unless the directory genuinely cannot contain repository text. */
+const SKIP_DIRS = new Set(['.git', 'node_modules']);
 const BINARY_EXT = new Set(['.pdf', '.woff2', '.png', '.jpg', '.jpeg', '.ico', '.ttf']);
 
 /** Every text file in the tree, as { path, text }.

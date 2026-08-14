@@ -5,13 +5,17 @@ import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { readAllFiles } from './lib/html.mjs';
 
-/** A throwaway tree containing the two shapes that broke the walker. */
+/** A throwaway tree containing the shapes that have broken the walker. */
 async function fixture() {
   const root = await mkdtemp(join(tmpdir(), 'portfolio-walk-'));
   const outside = await mkdtemp(join(tmpdir(), 'portfolio-outside-'));
   await writeFile(join(outside, 'index.js'), 'module.exports = 1;\n');
   await mkdir(join(root, 'css'));
   await writeFile(join(root, 'css/tokens.css'), ':root { --x: 1px; }\n');
+  // A dotted, gitignored directory of generated artifacts — the shape that hid
+  // sensitive text from the privacy scan when the walker skipped it by name.
+  await mkdir(join(root, '.superpowers/sdd'), { recursive: true });
+  await writeFile(join(root, '.superpowers/sdd/report.md'), 'generated artifact\n');
   // The link tools/e2e/README.md tells you to create before a Playwright run.
   await symlink(outside, join(root, 'node_modules'), 'dir');
   // A link that is NOT skipped by name, to prove links are scanned rather than
@@ -25,8 +29,24 @@ test('a symlinked node_modules does not break the repository scan', async () => 
   try {
     const files = await readAllFiles(root);
     const paths = files.map((f) => relative(root, f.path)).sort();
-    assert.deepEqual(paths, ['css/tokens.css', 'linked-note.txt'],
+    assert.deepEqual(paths, ['.superpowers/sdd/report.md', 'css/tokens.css', 'linked-note.txt'],
       'node_modules must be skipped by name, whether it is a directory or a link to one');
+  } finally {
+    await rm(root, { recursive: true, force: true });
+    await rm(outside, { recursive: true, force: true });
+  }
+});
+
+// The privacy scan is only as wide as this walker. A dotted directory of
+// generated artifacts is precisely where a quoted phone number ends up, so
+// reaching into it is the behaviour under test — not an incidental detail.
+test('generated-artifact directories are scanned, not skipped by name', async () => {
+  const { root, outside } = await fixture();
+  try {
+    const files = await readAllFiles(root);
+    const artifact = files.find((f) => f.path.endsWith('report.md'));
+    assert.ok(artifact, 'a file under .superpowers/ must appear in the scan');
+    assert.equal(artifact.text.trim(), 'generated artifact');
   } finally {
     await rm(root, { recursive: true, force: true });
     await rm(outside, { recursive: true, force: true });
