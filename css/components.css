@@ -1055,8 +1055,6 @@
 
 .chart-figure figcaption { margin-block-end: var(--space-3); font-weight: 600; }
 
-.chart-figure__caption-note { margin: var(--space-1) 0 0; font-weight: 400; font-size: var(--text-sm); color: var(--color-text-muted); }
-
 .chart-figure svg { inline-size: 100%; block-size: auto; }
 
 /* A donut's viewBox is square, so stretching it to the figure width made it as
