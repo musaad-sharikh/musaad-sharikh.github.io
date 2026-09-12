@@ -1,7 +1,5 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## What this is
 
 A bilingual (English/Arabic, LTR/RTL) personal portfolio served by GitHub Pages from the
@@ -11,7 +9,9 @@ build step for the site itself. Everything under `tools/` is development-only, u
 standard library, and is never served.
 
 `docs/design-spec.md` is the spec of record — the rationale behind every constraint below
-lives there. `docs/implementation-plan.md` is the task-by-task plan the site was built from.
+lives there. `docs/implementation-plan.md` is the task-by-task build plan and is not kept
+current — it still sets the site in Noto Sans Arabic. Where it disagrees with the spec, the
+code or the gates, those win.
 
 ## Commands
 
@@ -33,8 +33,9 @@ HEADLESS=1 node tools/e2e/e2e.mjs                        # headless
 node tools/e2e/e2e.mjs "D. keyboard"                     # one group
 ```
 
-The symlink can stay: the walker skips `node_modules` by name before it inspects the entry
-type. See `tools/e2e/README.md` for the traps that have bitten this suite.
+The script serves the site itself on port 8765, so no separate server is needed. The symlink
+can stay: the walker skips `node_modules` by name before it inspects the entry type.
+`tools/e2e/README.md` owns the suite's traps (per-page browser contexts, inert `<dialog>`s).
 
 Regenerating assets (both need tools this repo does not vendor):
 
@@ -57,7 +58,7 @@ working around it — the comments record what already broke.
   post-processed — stripping text from an existing PDF leaves the glyphs recoverable.
 - **The walker** (`tools/lib/html.mjs`, proven by `walk.test.mjs`) — every checker's reach.
   `SKIP_DIRS` is `.git` and `node_modules` only. Adding a name silently narrows the privacy
-  scan; that is exactly how a generated-artifact directory once hid quoted secrets. Symlinks
+  scan — a generated-artifact directory skipped by name hides any secret it quotes. Symlinks
   are scanned as the target path they store, never followed.
 - **Logical properties** (`logical-css.test.mjs`) — no physical CSS anywhere, property names
   *and* values (`float: left`, `object-position: right`). Escape hatch: a `physical-ok:`
@@ -121,10 +122,16 @@ strings. Dashboard charts are hand-authored SVG, `aria-hidden`, paired with a re
 as the accessible equivalent. Every demo carries the visible "Personal concept project — not
 client work" label; no fabricated client, metric or testimonial appears anywhere.
 
+**Adding a page** means: copying the inline `<head>` theme/language script; linking the three
+shared stylesheets plus `css/print.css` with `media="print"`; giving it an `ar.js` dictionary
+and a module entry (`js/main.js` for the home page, `demo.js` for each demo); and listing it in
+`PAGES` in both `tools/i18n.test.mjs` and `tools/e2e/e2e.mjs`, and in `sitemap.xml`.
+
 ## Conventions
 
-- Comments explain **why**, at length, and cite the failure that motivated the rule. Match
-  that register — a bare restatement of the code is noise here.
+- Comments explain **why**, at length, naming the failure mode each rule prevents. Match
+  that register — a bare restatement of the code is noise here — but state the hazard as it
+  stands, not the story of when it bit; Git history keeps that.
 - Latin runs inside Arabic copy are wrapped in `<span lang="en" dir="ltr">`; the e2e
   untranslated-text gate is zero-tolerance and relies on it.
 - Numbers stay Western-Arabic in both languages. `Intl` locales are requested as
