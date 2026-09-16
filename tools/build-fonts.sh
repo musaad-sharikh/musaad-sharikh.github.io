@@ -5,9 +5,10 @@ FONTS="$HOME/.local/share/fonts"
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
-# This machine's fonttools RPM ships the fontTools.subset module but not the
-# pyftsubset console-script wrapper; `python3 -m fontTools.subset` is the same
-# entry point (fontTools.subset:main) and takes identical flags.
+# Some distributions package fontTools with the fontTools.subset module but
+# without the pyftsubset console-script wrapper; `python3 -m fontTools.subset` is
+# the same entry point (fontTools.subset:main), takes identical flags, and works
+# whether or not the wrapper is installed.
 PYFTSUBSET=(python3 -m fontTools.subset)
 
 mkdir -p "$OUT"
