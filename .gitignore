@@ -14,3 +14,6 @@ node_modules
 # under .claude/ is harness-provisioned payload that regenerates on demand.
 .claude/*
 !.claude/settings.json
+# Pins the locally installed skills under .claude/skills/; ignored with them,
+# and pushing main would otherwise publish it at the site root.
+/skills-lock.json
